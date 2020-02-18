@@ -1,0 +1,25 @@
+{% extends 'setup/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Add or Update a Rate</h2>
+<hr>
+<form method="POST" class="rate-form" novalidate>{% csrf_token %}
+    <div class="form-row">
+        <div class="form-group col-md-5 mb-0">
+            {{ form.Source|as_crispy_field }}
+        </div>        
+        <div class="form-group col-md-5 mb-0">
+            {{ form.Report_Type|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 mb-0">
+            {{ form.Amount|as_crispy_field }}
+        </div>
+    </div>
+    
+    <hr>
+    
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+{% endblock content%}

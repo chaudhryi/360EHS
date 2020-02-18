@@ -1,0 +1,29 @@
+{% extends 'setup/base.html' %}
+
+{% block content %}
+
+<h3>List of Claimants</h3>
+<a class="btn btn-outline-primary btn-sm" href="{% url 'claimants-new' %}">+Add</a>
+<p></p>
+
+<table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Claimant Name</th>
+            <th scope="col">Insurance</th>
+            <th scope="col">Claim#</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in claimants %}
+        <tr>
+            <td><a href="{% url 'claimants-detail' item.pk %}">{{ item.Full_Name }}</a></td>
+            <td>{{ item.source.Name }}</td>
+            <td>{{ item.Claim_Number }}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}

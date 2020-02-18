@@ -1,0 +1,29 @@
+{% extends 'setup/base.html' %}
+
+{% block content %}
+
+<h3>360 EHS Rates</h3>
+<a class="btn btn-outline-primary btn-sm" href="{% url 'rates-new' %}">+Add</a>
+<p></p>
+
+<table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Source</th>
+            <th scope="col">Report Type</th>
+            <th scope="col">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in rates %}
+        <tr>
+            <td><a href="{% url 'rates-detail' item.pk %}">{{ item.Source.Name }}</a></td>
+            <td>{{ item.Report_Type }}</td>
+            <td>{{ item.Amount }}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}

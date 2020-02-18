@@ -1,0 +1,35 @@
+{% extends 'setup/base.html' %}
+
+{% block content %}
+
+<h3>Source Company Payment List</h3>
+<a class="btn btn-outline-primary btn-sm" href="{% url 'payments-new' %}">+Add</a>
+<p></p>
+
+<table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col" >Source Name</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Check No.</th>
+            <th scope="col">Date Received</th>
+            <th scope="col">Apply</th>
+            <th scope="col">Edit</th>            
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in payment %}
+        <tr>
+            <td>{{ item.Source.Name }}</td>
+            <td>${{ item.Amount }}</td>
+            <td>{{ item.CheckNumber }}</td>
+            <td>{{ item.Date }}</td>
+            <td><a class="material-icons" href="{% url 'process' item.pk %}">add</a></td> 
+            <td><a class="material-icons" href="{% url 'payments-detail' item.pk %}">edit</a></td>            
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}

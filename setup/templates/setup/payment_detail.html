@@ -1,0 +1,31 @@
+{% extends 'setup/base.html' %}
+
+{% block content %}
+
+<h4>360 Payment Detail Page for {{ payment.Source.Name }}</h4>
+<a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'payments-delete' payment.id %}">Delete</a>
+<a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'payments-update' payment.id %}">Update</a>
+<hr>
+
+    <div class="form-group col-md-12 mb-0">
+        <b>Source:</b> {{ payment.Source.Name }}
+    </div>    
+    <div class="form-group col-md-12 mb-0">
+        <b>Date:</b> {{ payment.Date }}
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <b>Amount:</b> {{ payment.Amount }}
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <b>Check#:</b> {{ payment.CheckNumber }}
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <b>Applied Balance:</b> {{ payment.AppliedBalance }}
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <b>Applied Complete:</b> {{ payment.Applied }}
+    </div>
+    
+<hr>
+
+{% endblock content %}

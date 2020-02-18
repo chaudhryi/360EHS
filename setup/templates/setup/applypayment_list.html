@@ -1,0 +1,33 @@
+{% extends 'setup/base.html' %}
+
+{% block content %}
+
+<h3>360 EHS Applied Payment List</h3>
+<a class="btn btn-outline-primary btn-sm" href="{% url 'applypayments-new' %}">+Add</a>
+<p></p>
+
+<table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Source Name</th>
+            <th scope="col">Invoice#</th>
+            <th scope="col">Invoice Amt</th>
+            <th scope="col">Paid Amount</th>            
+            <th scope="col">Date</th>            
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in applypayment %}
+        <tr>
+            <td><a href="{% url 'applypayments-detail' item.pk %}">{{ item.payment.Source.Name }}</a></td>
+            <td>{{ item.assessment.InvoiceNumber }}</td>
+            <td>{{ item.assessment.InvoiceTotal }}</td>
+            <td>{{ item.Amount }}</td>
+            <td>{{ item.Date }}</td>            
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}

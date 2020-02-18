@@ -1,0 +1,34 @@
+{% extends 'setup/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Add or Update an Applied Payment</h2>
+<hr>
+<form method="POST" class="applypayment-form" novalidate>{% csrf_token %}
+    <div class="form-row">
+        
+        <div class="form-group col-md-3 mb-0">
+            {{ form.assessment|as_crispy_field }}
+        </div>        
+        <div class="form-group col-md-3 mb-0">
+            {{ form.payment|as_crispy_field }}
+        </div>
+    </div>
+    <hr>
+    <div class="form-row">
+        <div class="form-group col-md-3 mb-0">
+            {{ form.Amount|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-3 mb-0">
+            {{ form.Date|as_crispy_field }}
+        </div>  
+              
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-primary" href="javascript:window.history.back()">Cancel</a>
+</form>
+
+
+{% endblock content%}

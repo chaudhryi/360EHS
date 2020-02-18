@@ -1,0 +1,38 @@
+{% extends 'setup/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Add or Update a Claimant</h2>
+<hr>
+<form method="POST" class="claimant-form" novalidate>{% csrf_token %}
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            {{ form.Title|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            {{ form.First_Name|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            {{ form.Last_Name|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            {{ form.source|as_crispy_field }}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            {{ form.Date_Of_Birth|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            {{ form.Claim_Number|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            {{ form.Date_Of_Accident|as_crispy_field }}
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+{% endblock content%}

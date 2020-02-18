@@ -1,0 +1,10 @@
+{% extends 'setup/base.html' %}
+
+{% block content %}
+<h2>Delete a Source Payment</h2>
+<form method="POST" class="payment-form" novalidate>{% csrf_token %}
+    <p>Are you sure you want to delete payment {{ payment.Source.Name }} for {{ payment.Amount }}</p>
+    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'payments-detail' object.id %}">Cancel</a>
+</form>
+{% endblock content%}

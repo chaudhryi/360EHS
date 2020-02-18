@@ -1,0 +1,84 @@
+{% extends 'setup/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h4>Process payment: </h4>
+<h6>
+    <p>Source Company: {{payment.Source.Name}} {{payment.CheckNumber}}</p>
+    <p>Date of check: {{payment.Date}}</p>
+    <p>Amount: ${{payment.Amount}}</p>
+    <p>Total Applied: ${{total_applied.Amount__sum}}</p>
+    <p>Balance Remaining: <span style="background-color: #FFFF00">{{balance}}</span></p>
+    
+</h6>
+<hr>
+
+<h5>UnApplied Invoices</h5>
+<table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Assessment</th>
+            <th scope="col">Invoice#</th>
+            <th scope="col">Date</th>
+            <th scope="col">Subtotal</th>
+            <th scope="col">HST</th>
+            <th scope="col">Total</th>
+            <th scope="col">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invoice in openinvoices %}
+        <tr>
+            <td>{{ invoice.Claimant_Name }}</td>
+            <td>{{ invoice.InvoiceNumber }}</td>
+            <td>{{ invoice.InvoiceDate }}</td>
+            <td>{{ invoice.InvoiceSubtotal }}</td>
+            <td>{{ invoice.InvoiceTax }}</td>
+            <td>{{ invoice.InvoiceTotal }}</td>
+            <td>
+                <form method="POST" class="payment-form" novalidate>{% csrf_token %}
+                    {{form.Amount}}
+                    <input type="text" size="5" name="Amount" value="{{invoice.InvoiceTotal}}">
+                    <button class="btn btn-outline-primary btn-sm" type="submit">Apply</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<h5>Applied Invoices</h5>
+<table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Assessment</th>
+            <th scope="col">Invoice#</th>
+            <th scope="col">Date</th>
+            <th scope="col">Subtotal</th>
+            <th scope="col">HST</th>
+            <th scope="col">Total</th>
+            <th scope="col">Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invoice in closedinvoices %}
+        <tr>
+            <td>{{ invoice.Claimant_Name }}</td>
+            <td>{{ invoice.InvoiceNumber }}</td>
+            <td>{{ invoice.InvoiceDate }}</td>
+            <td>{{ invoice.InvoiceSubtotal }}</td>
+            <td>{{ invoice.InvoiceTax }}</td>
+            <td>{{ invoice.InvoiceTotal }}</td>
+            <td><i class="material-icons">edit</i></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+{% endblock content %}

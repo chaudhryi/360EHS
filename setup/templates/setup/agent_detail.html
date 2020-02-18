@@ -1,0 +1,52 @@
+{% extends 'setup/base.html' %}
+
+{% block content %}
+
+<h4>360 Agent Detail Page for {{ agent.First_Name }} {{ agent.Last_Name }}</h4>
+<a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'agents-delete' agent.id %}">Delete</a>
+<a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'agents-update' agent.id %}">Update</a>
+<hr>
+
+    <div class="form-group col-md-12 mb-0">
+        <b>Agent:</b> {{ agent.First_Name }}  {{ agent.Last_Name }}
+    </div>    
+    <div class="form-group col-md-12 mb-0">
+        <b>Email Address:</b> {{ agent.Email }}
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <b>Address:</b> {{ agent.Address }}
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <b>Home Phone:</b> {{ agent.Home_Phone }}
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <b>Mobile Phone:</b> {{ agent.Mobile_Phone }}
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <b>Hire Date:</b> {{ agent.Hire_Date }}
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <b>NOTES:</b> {{ agent.Notes }}
+    </div>
+
+<hr>
+
+<table style="width:100%">
+    <tr>
+      <th>IME</th>
+      <th>PR</th>
+      <th>AD</th>
+      <th>NS</th>
+      <th>EX</th>
+    </tr>
+    <tr>
+      <td>${{ agent.Rate_IME }}</td>
+      <td>${{ agent.Rate_PR }}</td>
+      <td>${{ agent.Rate_AD }}</td>
+      <td>${{ agent.Rate_NS }}</td>
+      <td>${{ agent.Rate_EX }}</td>
+    </tr>
+   
+  </table>
+
+{% endblock content %}

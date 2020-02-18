@@ -1,0 +1,33 @@
+{% extends 'setup/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Add or Update an Payment</h2>
+<hr>
+<form method="POST" class="payment-form" novalidate>{% csrf_token %}
+    <div class="form-row">
+        
+        <div class="form-group col-md-3 mb-0">
+            {{ form.Source|as_crispy_field }}
+        </div>        
+        <div class="form-group col-md-3 mb-0">
+            {{ form.Date|as_crispy_field }}
+        </div>
+    </div>
+    <hr>
+    <div class="form-row">
+        <div class="form-group col-md-3 mb-0">
+            {{ form.Amount|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-3 mb-0">
+            {{ form.CheckNumber|as_crispy_field }}
+        </div>  
+              
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+
+{% endblock content%}
