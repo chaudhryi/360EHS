@@ -17,9 +17,9 @@
     <tbody>
         {% for item in rates %}
         <tr>
-            <td><a href="{% url 'rates-detail' item.pk %}">{{ item.Source.Name }}</a></td>
-            <td>{{ item.Report_Type }}</td>
-            <td>{{ item.Amount }}</td>
+            <td><a href="{% url 'rates-detail' item.pk %}">{{ item.source.name }}</a></td>
+            <td>{{ item.report_type }}</td>
+            <td>{{ item.amount }}</td>
         </tr>
         {% endfor %}
 

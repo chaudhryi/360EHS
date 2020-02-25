@@ -17,9 +17,9 @@
     <tbody>
         {% for item in claimants %}
         <tr>
-            <td><a href="{% url 'claimants-detail' item.pk %}">{{ item.Full_Name }}</a></td>
-            <td>{{ item.source.Name }}</td>
-            <td>{{ item.Claim_Number }}</td>
+            <td><a href="{% url 'claimants-detail' item.pk %}">{{ item.full_name }}</a></td>
+            <td>{{ item.source.name }}</td>
+            <td>{{ item.claim_number }}</td>
         </tr>
         {% endfor %}
 

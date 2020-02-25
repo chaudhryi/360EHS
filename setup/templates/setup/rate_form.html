@@ -8,13 +8,13 @@
 <form method="POST" class="rate-form" novalidate>{% csrf_token %}
     <div class="form-row">
         <div class="form-group col-md-5 mb-0">
-            {{ form.Source|as_crispy_field }}
+            {{ form.source|as_crispy_field }}
         </div>        
         <div class="form-group col-md-5 mb-0">
-            {{ form.Report_Type|as_crispy_field }}
+            {{ form.report_type|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ form.Amount|as_crispy_field }}
+            {{ form.amount|as_crispy_field }}
         </div>
     </div>
     

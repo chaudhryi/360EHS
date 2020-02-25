@@ -5,9 +5,9 @@
 <div class="container">
     <div class="card">
         <div class="card-header">            
-            <strong>360 EHS Invoice #:</strong> {{ invoice.InvoiceNumber }}
+            <strong>360 EHS Invoice #:</strong> {{ invoice.invoice_number }}
             <span class="float-right"> <strong>Status:</strong>
-                {% if invoice.InvoicePaid == True %}
+                {% if invoice.invoice_paid == True %}
                     <font color="green">PAID</font></span>                
                 {% else %}
                 <font color="red">OUTSTANDING</font></span>
@@ -23,26 +23,26 @@
                     </div>
                     <div>19-2131 Williams Pky </div>
                     <div>Brampton, Ontario L6S 5Z4</div>
-                    <div>Email: info@360ehs.com</div>
+                    <div>email: info@360ehs.com</div>
                     <div>Phone: 416 555 5555</div>
                 </div>
 
                 <div class="col-sm-6">
                     <h6 class="mb-3">To:</h6>
                     <div>
-                        <strong>{{ invoice.Source.Name }}</strong>
+                        <strong>{{ invoice.source.name }}</strong>
                     </div>
-                    <div>Attn: {{ invoice.Source.Billing_Contact }}</div>
-                    <div>{{ invoice.Source.Address }}</div>
-                    <div>Email: {{ invoice.Source.Billing_Email }}</div>
-                    <div>Phone: {{ invoice.Source.Billing_Phone }}</div>
+                    <div>Attn: {{ invoice.source.billing_contact }}</div>
+                    <div>{{ invoice.source.address }}</div>
+                    <div>email: {{ invoice.source.billing_email }}</div>
+                    <div>Phone: {{ invoice.source.billing_phone }}</div>
                 </div>
             </div>
             <div class="row mb-4">
                 <div class="col-sm-6">
-                    <div><strong>Physician: </strong>Dr. {{ invoice.Doctor }}</div>
-                    <div><strong>Claimant: </strong>{{ invoice.Claimant_Name }}</div>
-                    <div><strong>Claim Number: </strong>{{ invoice.Claim_Number }}</div>
+                    <div><strong>Physician: </strong>Dr. {{ invoice.doctor }}</div>
+                    <div><strong>Claimant: </strong>{{ invoice.claimant_name }}</div>
+                    <div><strong>Claim Number: </strong>{{ invoice.claim_number }}</div>
                     
                 </div>                
             </div>
@@ -62,13 +62,13 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="center">{{ invoice.InvoiceDate }}</td>
-                            <td class="left strong">{{ invoice.Report_Type.Abbreviation }}</td>
-                            <td class="left">{{ invoice.Report_Type.Description }}</td>
+                            <td class="center">{{ invoice.invoice_date }}</td>
+                            <td class="left strong">{{ invoice.report_type.abbreviation }}</td>
+                            <td class="left">{{ invoice.report_type.description }}</td>
 
-                            <td class="right">${{ invoice.InvoiceSubtotal }}</td>
+                            <td class="right">${{ invoice.invoice_subtotal }}</td>
                             <td class="center">1</td>
-                            <td class="right">${{ invoice.InvoiceSubtotal }}</td>
+                            <td class="right">${{ invoice.invoice_subtotal }}</td>
                         </tr>
                         
                     </tbody>
@@ -86,20 +86,20 @@
                                 <td class="left">
                                     <strong>Subtotal</strong>
                                 </td>
-                                <td class="right">${{ invoice.InvoiceSubtotal }}</td>
+                                <td class="right">${{ invoice.invoice_subtotal }}</td>
                             </tr>                            
                             <tr>
                                 <td class="left">
                                     <strong>HST (13%)</strong>
                                 </td>
-                                <td class="right">${{ invoice.InvoiceTax }}</td>
+                                <td class="right">${{ invoice.invoice_tax }}</td>
                             </tr>
                             <tr>
                                 <td class="left">
                                     <strong>Total</strong>
                                 </td>
                                 <td class="right">
-                                    <strong>${{ invoice.InvoiceTotal }}</strong>
+                                    <strong>${{ invoice.invoice_total }}</strong>
                                 </td>
                             </tr>
                         </tbody>

@@ -2,34 +2,34 @@
 
 {% block content %}
 
-<h4>360 Physician Detail Page for {{ doctor.First_Name }} {{ doctor.Last_Name }}</h4>
+<h4>360 Physician Detail Page for {{ doctor.first_name }} {{ doctor.last_name }}</h4>
 <a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'doctors-delete' doctor.id %}">Delete</a>
 <a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'doctors-update' doctor.id %}">Update</a>
 <hr>
 
 <div class="form-group col-md-12 mb-0">
-    <b>Physician: </b>Dr. {{ doctor.First_Name }} {{ doctor.Last_Name }}
+    <b>Physician: </b>Dr. {{ doctor.first_name }} {{ doctor.last_name }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>Email Address: </b> {{ doctor.Email }}
+    <b>Email address: </b> {{ doctor.email }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>Address: </b> {{ doctor.Address }}
+    <b>Address: </b> {{ doctor.address }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>Home Phone: </b> {{ doctor.Home_Phone }}
+    <b>Home Phone: </b> {{ doctor.home_phone }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>Mobile Phone: </b> {{ doctor.Mobile_Phone }}
+    <b>Mobile Phone: </b> {{ doctor.mobile_phone }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>CMPA#: </b> {{ doctor.CMPA }}
+    <b>CMPA#: </b> {{ doctor.cmpa }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>CPSO#: </b> {{ doctor.CPSO }}
+    <b>CPSO#: </b> {{ doctor.cpso }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>NOTES: </b> {{ doctor.Notes }}
+    <b>Notes: </b> {{ doctor.notes }}
 </div>
 <hr>
 
@@ -49,11 +49,11 @@
         <th>EX</th>
     </tr>
     <tr>
-        <td>${{ doctor.Rate_IME }}</td>
-        <td>${{ doctor.Rate_PR }}</td>
-        <td>${{ doctor.Rate_AD }}</td>
-        <td>${{ doctor.Rate_NS }}</td>
-        <td>${{ doctor.Rate_EX }}</td>
+        <td>${{ doctor.rate_ime }}</td>
+        <td>${{ doctor.rate_pr }}</td>
+        <td>${{ doctor.rate_ad }}</td>
+        <td>${{ doctor.rate_ns }}</td>
+        <td>${{ doctor.rate_ex }}</td>
     </tr>
 
 </table>

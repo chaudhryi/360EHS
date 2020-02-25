@@ -2,46 +2,46 @@
 
 {% block content %}
 
-<h4>360EHS Source Company Detail Page for {{ source.Name }}</h4>
+<h4>360EHS Source Company Detail Page for {{ source.name }}</h4>
 <a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'sources-delete' source.id %}">Delete</a>
 <a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'sources-update' source.id %}">Update</a>
 <hr>
 
 <div class="form-group col-md-12 mb-0">
-    <b>Source Company: </b> {{ source.Name }}
+    <b>Source Company: </b> {{ source.name }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>Address: </b> {{ source.Address }}
+    <b>address: </b> {{ source.address }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>Office Phone: </b> {{ source.Office_Phone }}
+    <b>Office Phone: </b> {{ source.office_phone }}
 </div>
 <hr>
 <div class="form-group col-md-12 mb-0">
-    <b>Primary Contact: </b> {{ source.Main_Contact }}
+    <b>Primary Contact: </b> {{ source.main_contact }}
 </div>
 <div class="form-row col-md-12 mb-0">    
     <div class="form-group col-md-6 mb-0">
-        <b>Primary Contact Phone: </b> {{ source.Contact_Phone }}
+        <b>Primary Contact Phone: </b> {{ source.contact_phone }}
     </div>
     <div class="form-group col-md-6 mb-0">
-        <b>Primary Contact Email: </b> {{ source.Contact_Email }}
+        <b>Primary Contact email: </b> {{ source.contact_email }}
     </div>
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>Billing Contact: </b> {{ source.Billing_Contact }}
+    <b>Billing Contact: </b> {{ source.billing_contact }}
 </div>
 <div class="form-row col-md-12 mb-0">    
     <div class="form-group col-md-6 mb-0">
-        <b>Billing Contact Phone: </b>    {{ source.Billing_Phone }}
+        <b>Billing Contact Phone: </b>    {{ source.billing_phone }}
     </div>
     <div class="form-group col-md-6 mb-0">
-        <b>Billing Contact Email: </b> {{ source.Billing_Email }}
+        <b>Billing Contact email: </b> {{ source.billing_email }}
     </div>
 </div>
 
 <div class="form-group col-md-12 mb-0">
-    <b>NOTES:</b> {{ source.Notes }}
+    <b>notes:</b> {{ source.notes }}
 </div>
 <hr>
 
@@ -57,8 +57,8 @@
         {% for item in rates %}
         <tr>
             
-            <td>{{ item.Report_Type }}</td>
-            <td>{{ item.Amount }}</td>
+            <td>{{ item.report_type }}</td>
+            <td>${{ item.amount }}</td>
         </tr>
         {% endfor %}
 

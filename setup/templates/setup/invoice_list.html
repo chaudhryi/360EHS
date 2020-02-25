@@ -35,13 +35,13 @@
     <tbody>
         {% for item in invoices %}
         <tr>
-            <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.InvoiceNumber }}</a></td>
-            <td>{{ item.Source.Name }}</td>
-            <td>{{ item.InvoiceDate }}</td>
-            <td>{{ item.InvoiceSubtotal }}</td>
-            <td>{{ item.InvoiceTax }}</td>
-            <td>{{ item.InvoiceTotal }}</td>
-            <td>{% if item.InvoicePaid == True %}
+            <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.invoice_number }}</a></td>
+            <td>{{ item.source.name }}</td>
+            <td>{{ item.invoice_date }}</td>
+            <td>{{ item.invoice_subtotal }}</td>
+            <td>{{ item.invoice_tax }}</td>
+            <td>{{ item.invoice_total }}</td>
+            <td>{% if item.invoice_paid == True %}
                 <font color="green">PAID</font></span>
                 {% else %}
                 <font color="red">OUTSTANDING</font></span>

@@ -2,28 +2,28 @@
 
 {% block content %}
 
-<h4>Claimant Detail Page for {{ claimant.Full_Name }}</h4>
+<h4>Claimant Detail Page for {{ claimant.full_name }}</h4>
 <a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'claimants-delete' claimant.id %}">Delete</a>
 <a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'claimants-update' claimant.id %}">Update</a>
 <hr>
 
     <div class="form-group col-md-12 mb-0">
-        <b>Claimant:</b> {{claimant.Full_Name}}
+        <b>Claimant:</b> {{claimant.full_name}}
     </div>    
     <div class="form-group col-md-12 mb-0">
-        <b>Date of Birth:</b> {{ claimant.Date_Of_Birth }}
+        <b>Date of Birth:</b> {{ claimant.date_of_birth }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Age:</b> {{ claimant.Age }}
+        <b>Age:</b> {{ claimant.age }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Claim Number:</b> {{ claimant.Claim_Number }}
+        <b>Claim Number:</b> {{ claimant.claim_number }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Insurance Company</b> {{ claimant.source.Name }}
+        <b>Insurance Company</b> {{ claimant.source.name }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Date of Accident:</b> {{ claimant.Date_Of_Accident }}
+        <b>Date of Accident:</b> {{ claimant.date_of_accident }}
     </div>
     
 <hr>

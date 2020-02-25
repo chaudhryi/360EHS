@@ -3,7 +3,7 @@
 {% block content %}
 <h2>Delete a Rate</h2>
 <form method="POST" class="rate-form" novalidate>{% csrf_token %}
-    <p>Are you sure you want to delete {{rate.Source.Name}}</p>
+    <p>Are you sure you want to delete {{rate.source.name}}</p>
     <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
     <a class="btn btn-outline-secondary btn-sm" href="{% url 'rates-detail' object.id %}">Cancel</a>
 </form>

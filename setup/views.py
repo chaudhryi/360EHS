@@ -40,7 +40,7 @@ class AgentCreateView(CreateView):
     model = Agent
     template_name = 'setup/agent_form.html'
     form_class = AgentForm
-    #initial = {"Email": "Ijaz Email"}
+    #initial = {"email": "Ijaz email"}
     
 
 class AgentUpdateView(UpdateView):
@@ -141,9 +141,9 @@ class SourceDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(SourceDetailView, self).get_context_data(*args, **kwargs)
-        #context['rates'] = self.object.rate_set.all().order_by('-Amount')  **THis also does the same thing
-        context['rates'] = Rate.objects.all().filter(Source=self.object).order_by('-Amount')
-        #context['rates'] = Rate.objects.all().filter(Source=self.kwargs['pk']).order_by('-Amount')    **This also does the same thing
+        #context['rates'] = self.object.rate_set.all().order_by('-amount')  **THis also does the same thing
+        context['rates'] = Rate.objects.all().filter(source=self.object).order_by('-amount')
+        #context['rates'] = Rate.objects.all().filter(Source=self.kwargs['pk']).order_by('-amount')    **This also does the same thing
         return context
 
 
@@ -216,7 +216,7 @@ class AssessmentDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(AssessmentDetailView, self).get_context_data(*args, **kwargs)
-        #context['rates'] = self.object.rate_set.all().order_by('-Amount')  **THis also does the same thing
+        #context['rates'] = self.object.rate_set.all().order_by('-amount')  **THis also does the same thing
         #context['invoices'] = Invoice.objects.all().filter(Assessment=self.object).order_by('-Date')
         context['payments'] = ApplyPayment.objects.filter(assessment=self.kwargs['pk'])   
         return context
@@ -254,7 +254,7 @@ class InvoiceListView(ListView):
         except KeyError:
             search = None
         if search:
-            invoices = Assessment.objects.filter(InvoiceNumber=search)
+            invoices = Assessment.objects.filter(invoice_number=search)
         else:
             invoices = Assessment.objects.all()
         return invoices
@@ -270,13 +270,13 @@ class InvoiceCreateView(UpdateView):
     model = Assessment
     template_name = 'setup/invoice_form.html'
     form_class = InvoiceForm
-    # initial = {"InvoiceSubtotal": '500'}
+    # initial = {"invoice_subtotal": '500'}
     
     def get_context_data(self, *args, **kwargs):
         context = super(InvoiceCreateView, self).get_context_data(**kwargs) 
         source_pk = self.kwargs['source_pk']
         report_pk = self.kwargs['report_pk']               
-        context['hold'] = Rate.objects.get(Source=source_pk, Report_Type=report_pk)
+        context['hold'] = Rate.objects.get(source=source_pk, report_type=report_pk)
         return context    
             
 
@@ -305,7 +305,7 @@ class RateCreateView(CreateView):
     model = Rate
     template_name = 'setup/rate_form.html'
     form_class = RateForm
-    #initial = {"Email": "Ijaz Email"}
+    #initial = {"email": "Ijaz email"}
     
 
 class RateUpdateView(UpdateView):
@@ -341,7 +341,7 @@ class PaymentCreateView(CreateView):
     model = Payment
     template_name = 'setup/payment_form.html'
     form_class = PaymentForm
-    #initial = {"Email": "Ijaz Email"}
+    #initial = {"email": "Ijaz email"}
     
 
 class PaymentUpdateView(UpdateView):
@@ -377,7 +377,7 @@ class ApplyPaymentCreateView(CreateView):
     model = ApplyPayment
     template_name = 'setup/applypayment_form.html'
     form_class = ApplyPaymentForm
-    #initial = {"Email": "Ijaz Email"}
+    #initial = {"email": "Ijaz email"}
     
 
 class ApplyPaymentUpdateView(UpdateView):
@@ -395,70 +395,72 @@ class ApplyPaymentDeleteView(DeleteView):
 
 def CreateDoctorInvoice(assessment_id):
     assessment = Assessment.objects.get(id=assessment_id)
-    abr = assessment.Report_Type.Abbreviation
+    abr = assessment.report_type.abbreviation
     if abr == 'IME':
-        bill = assessment.Doctor.Rate_IME
+        bill = assessment.doctor.rate_ime
     elif abr == 'AD':
-        bill = assessment.Doctor.Rate_AD
+        bill = assessment.doctor.rate_ad
     elif abr == 'PR':
-        bill = assessment.Doctor.Rate_PR
+        bill = assessment.doctor.rate_pr
     elif abr == 'NS':
-        bill = assessment.Doctor.Rate_NS
+        bill = assessment.doctor.rate_ns
     elif abr == 'EX':
-        bill = assessment.Doctor.Rate_EX
-        
-    doctorbill = DoctorBill(assessment=assessment, BillSubtotal=bill)
+        bill = assessment.doctor.rate_ex
+    elif abr == 'AR':
+        bill = assessment.doctor.rate_ar
+
+    doctorbill = DoctorBill(assessment=assessment, bill_subtotal=bill)
     doctorbill.save()
     return
 
 
 def CreateAgentInvoice(assessment_id):
     assessment = Assessment.objects.get(id=assessment_id)
-    abr = assessment.Report_Type.Abbreviation
+    abr = assessment.report_type.Abbreviation
     if abr == 'IME':
-        bill = assessment.Agent.Rate_IME
+        bill = assessment.agent.rate_ime
     elif abr == 'AD':
-        bill = assessment.Agent.Rate_AD
+        bill = assessment.agent.rate_ad
     elif abr == 'PR':
-        bill = assessment.Agent.Rate_PR
+        bill = assessment.agent.rate_pr
     elif abr == 'NS':
-        bill = assessment.Agent.Rate_NS
+        bill = assessment.agent.rate_ns
     elif abr == 'EX':
-        bill = assessment.Agent.Rate_EX
+        bill = assessment.agent.rate_ex
         
-    agentbill = AgentBill(assessment=assessment, BillTotal=bill)
+    agentbill = AgentBill(assessment=assessment, bill_total=bill)
     agentbill.save()
     return
 
 
 def CreateClinicInvoice(assessment_id):
     assessment = Assessment.objects.get(id=assessment_id)
-    abr = assessment.Report_Type.Abbreviation
+    abr = assessment.report_type.abbreviation
     if abr == 'IME':
-        bill = assessment.Clinic.Rate_IME
+        bill = assessment.clinic.rate_ime
     elif abr == 'NS':
-        bill = assessment.Clinic.Rate_NS
+        bill = assessment.clinic.rate_ns
     else:
         return
 
-    clinicbill = ClinicBill(assessment=assessment, BillTotal=bill)
+    clinicbill = ClinicBill(assessment=assessment, bill_total=bill)
     clinicbill.save()
     return
 
 
-def InvoicePaidSwitch(invoice_id):
+def invoice_paidSwitch(invoice_id):
     invoice = Assessment.objects.get(id=invoice_id)
-    invoice_total = invoice.InvoiceTotal    
+    invoice_total = invoice.invoice_total    
     applied_invoices = ApplyPayment.objects.filter(assessment=invoice_id)    
-    applied_total = applied_invoices.aggregate(Sum('Amount'))["Amount__sum"]
+    applied_total = applied_invoices.aggregate(Sum('amount'))["amount__sum"]
        
     if invoice_total == applied_total:
-        invoice.InvoicePaid = True
+        invoice.invoice_paid = True
         CreateDoctorInvoice(invoice_id)
         CreateAgentInvoice(invoice_id)
         CreateClinicInvoice(invoice_id)
     else:
-        invoice.InvoicePaid = False
+        invoice.invoice_paid = False
     invoice.save()    
     return  
     
@@ -473,17 +475,17 @@ def InvoicePaidSwitch(invoice_id):
 #     #initial default data string setup         
 #     initialdata = {'payment': pk, 'Date': date.today()}
 #     #running balance of all invoices already applied to this Source Payment. returns dictionary!    
-#     total_applied = applied.aggregate(Sum('Amount'))    
+#     total_applied = applied.aggregate(Sum('amount'))    
     
 #     if 'search' in request.GET:
 #         search = request.GET['search'] 
 #         #find all invoices in Assessments with invoice#=search AND Source company with above Payment pk       
-#         invoice_search = Assessment.objects.get(InvoiceNumber=search, Source=payment.Source)
+#         invoice_search = Assessment.objects.get(invoice_number=search, Source=payment.Source)
                 
 #         if invoice_search is not None:
 
 #             if ApplyPayment.objects.filter(assessment=invoice_search):
-#                 if invoice_search.InvoicePaid == True:
+#                 if invoice_search.invoice_paid == True:
 #                     messages.error(request, 'Invoice Already applied')
 #                     return redirect('process', pk)
 
@@ -499,15 +501,15 @@ def InvoicePaidSwitch(invoice_id):
 #         # Check if the form is valid:
 #         if form.is_valid():
 #             applypayment_assessment = form.cleaned_data['assessment']
-#             x = form.cleaned_data['Amount']            
-#             z = Assessment.objects.get(id=applypayment_assessment.id).InvoiceTotal          
+#             x = form.cleaned_data['amount']            
+#             z = Assessment.objects.get(id=applypayment_assessment.id).invoice_total          
 
 #             if x > z:
 #                 messages.error(request, 'Applied amount cannot be higher than invoice amount')
 #                 return redirect('process', pk)
             
 #             form.save()                        
-#             InvoicePaidSwitch(applypayment_assessment.id)            
+#             invoice_paidSwitch(applypayment_assessment.id)            
 #             return redirect('process', pk)           
 
 #     # If this is a GET (or any other method) create the default form.
@@ -525,11 +527,19 @@ def InvoicePaidSwitch(invoice_id):
 
 def ProcessPayment(request, pk):
     sourcepayment = Payment.objects.get(id=pk)
+
+    openinvoices = Assessment.objects.filter(claimant__source=sourcepayment.source, invoice_paid = False)
+    closedinvoices = Assessment.objects.filter(claimant__source=sourcepayment.source, invoice_paid = True)
+
     applied = ApplyPayment.objects.filter(payment=pk)
-    openinvoices = Assessment.objects.filter(Source=sourcepayment.Source, InvoicePaid = False)
-    closedinvoices = Assessment.objects.filter(Source=sourcepayment.Source, InvoicePaid = True)
-    total_applied = applied.aggregate(Sum('Amount'))
-    balance = sourcepayment.Amount - total_applied["Amount__sum"]
+    
+    if applied:
+        total_applied = applied.aggregate(Sum('amount'))
+        subtract = total_applied["amount__sum"]
+    else:
+        subtract = 0    
+
+    balance = sourcepayment.amount - subtract
 
     if request.method == 'POST':
         # Create a form instance and populate it with data from the request (binding):
@@ -537,15 +547,15 @@ def ProcessPayment(request, pk):
         # Check if the form is valid:
         if form.is_valid():
             applypayment_assessment = form.cleaned_data['assessment']
-            x = form.cleaned_data['Amount']            
-            z = Assessment.objects.get(id=applypayment_assessment.id).InvoiceTotal          
+            x = form.cleaned_data['amount']            
+            z = Assessment.objects.get(id=applypayment_assessment.id).invoice_total          
 
             if x > z:
                 messages.error(request, 'Applied amount cannot be higher than invoice amount')
                 return redirect('process', pk)
             
             form.save()                        
-            InvoicePaidSwitch(applypayment_assessment.id)            
+            invoice_paidSwitch(applypayment_assessment.id)            
             return redirect('process', pk)           
 
     # If this is a GET (or any other method) create the default form.
@@ -558,7 +568,7 @@ def ProcessPayment(request, pk):
         'openinvoices': openinvoices,
         'closedinvoices': closedinvoices,
         'payment': sourcepayment,
-        'total_applied': total_applied,
+        'total_applied': subtract,
         'balance': balance,        
                 
     }       

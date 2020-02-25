@@ -3,7 +3,7 @@
 {% block content %}
 <h2>Delete Claimant</h2>
 <form method="POST" class="agent-form" novalidate>{% csrf_token %}
-    <p>Are you sure you want to delete {{claimant.Full_Name}}</p>
+    <p>Are you sure you want to delete {{claimant.full_name}}</p>
     <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
     <a class="btn btn-outline-secondary btn-sm" href="{% url 'claimants-detail' object.id %}">Cancel</a>
 </form>

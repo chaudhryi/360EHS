@@ -6,11 +6,11 @@
 
 <h4>Process payment: </h4>
 <h6>
-    <p>Source Company: {{payment.Source.Name}} {{payment.CheckNumber}}</p>
-    <p>Amount: ${{payment.Amount}}</p>
-    <p>Total Applied: ${{total_applied.Amount__sum}}</p>
-    <p>Balance Remaining: {{payment.AppliedBalance}}</p>
-    <p>Date of check: {{payment.Date}}</p>
+    <p>Source Company: {{payment.source.name}} {{payment.check_number}}</p>
+    <p>amount: ${{payment.amount}}</p>
+    <p>Total Applied: ${{total_applied.amount__sum}}</p>
+    <p>Balance Remaining: {{payment.applied_balance}}</p>
+    <p>Date of check: {{payment.date}}</p>
 </h6>
 
 <hr>
@@ -54,12 +54,12 @@
     </thead>
     <tbody>
         <tr>
-            <td>{{ invoice.Claimant_Name }}</td>
-            <td>{{ invoice.InvoiceNumber }}</td>
-            <td>{{ invoice.InvoiceDate }}</td>
-            <td>{{ invoice.InvoiceSubtotal }}</td>
-            <td>{{ invoice.InvoiceTax }}</td>
-            <td>{{ invoice.InvoiceTotal }}</td>
+            <td>{{ invoice.claimant_name }}</td>
+            <td>{{ invoice.invoice_number }}</td>
+            <td>{{ invoice.invoice_date }}</td>
+            <td>{{ invoice.invoice_subtotal }}</td>
+            <td>{{ invoice.invoice_tax }}</td>
+            <td>{{ invoice.invoice_total }}</td>
             <td><i class="material-icons">edit</i></td>
         </tr>
     </tbody>
@@ -76,10 +76,10 @@
             {{ form.payment|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ form.Date|as_crispy_field }}
+            {{ form.date|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ form.Amount|as_crispy_field }}
+            {{ form.amount|as_crispy_field }}
         </div>
     </div>
     <button class="btn btn-outline-primary btn-sm" type="submit">Apply Payment</button>
@@ -106,14 +106,14 @@
     <tbody>
         {% for item in applied %}
         <tr>
-            <td>{{ item.assessment.Claimant_Name }}</td>
-            <td>{{ item.assessment.InvoiceNumber }}</td>
-            <td>{{ item.assessment.InvoiceDate }}</td>
-            <td>${{ item.assessment.InvoiceSubtotal }}</td>
-            <td>${{ item.assessment.InvoiceTax }}</td>
-            <td>${{ item.assessment.InvoiceTotal }}</td>
-            <td class="table-primary">${{ item.Amount }}</td>
-            <td>{{ item.assessment.InvoicePaid }}</td>
+            <td>{{ item.assessment.claimant_name }}</td>
+            <td>{{ item.assessment.invoice_number }}</td>
+            <td>{{ item.assessment.invoice_date }}</td>
+            <td>${{ item.assessment.invoice_subtotal }}</td>
+            <td>${{ item.assessment.invoice_tax }}</td>
+            <td>${{ item.assessment.invoice_total }}</td>
+            <td class="table-primary">${{ item.amount }}</td>
+            <td>{{ item.assessment.invoice_paid }}</td>
             <td><a class="material-icons" href="{% url 'applypayments-delete' item.id %}">delete_outline</a><a class="material-icons" href="{% url 'applypayments-update' item.id %}">edit</a></td>
             
         </tr>

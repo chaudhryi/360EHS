@@ -9,22 +9,22 @@
     <div class="form-row">
         
         <div class="form-group col-md-3 mb-0">
-            {{ form.InvoiceNumber|as_crispy_field }}
+            {{ form.invoice_number|as_crispy_field }}
         </div>        
         <div class="form-group col-md-3 mb-0">
-            {{ form.InvoiceDate|as_crispy_field }}
+            {{ form.invoice_date|as_crispy_field }}
         </div>
     </div>
     <hr>
     <div class="form-row">
         <div class="form-group col-md-3 mb-0">
-            {{ form.InvoiceSubtotal|as_crispy_field }}
+            {{ form.invoice_subtotal|as_crispy_field }}
         </div>
         <div class="form-group col-md-3 mb-0">
-            {{ form.InvoiceTax|as_crispy_field }}
+            {{ form.invoice_tax|as_crispy_field }}
         </div>  
         <div class="form-group col-md-3 mb-0">
-            {{ form.InvoiceTotal|as_crispy_field }}
+            {{ form.invoice_total|as_crispy_field }}
         </div>      
     </div>
     
@@ -33,9 +33,9 @@
 
 <script>
 
-  document.getElementById("id_InvoiceSubtotal").value = {{hold.Amount}};
-  document.getElementById("id_InvoiceTax").value = ({{hold.Amount}}/100) * 13;
-  document.getElementById("id_InvoiceTotal").value = {{hold.Amount}} + ({{hold.Amount}}/100) * 13;
+  document.getElementById("id_invoice_subtotal").value = {{hold.amount}};
+  document.getElementById("id_invoice_tax").value = ({{hold.amount}}/100) * 13;
+  document.getElementById("id_invoice_total").value = {{hold.amount}} + ({{hold.amount}}/100) * 13;
 
 </script>
 {% endblock content%}

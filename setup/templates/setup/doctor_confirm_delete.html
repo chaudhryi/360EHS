@@ -1,9 +1,9 @@
 {% extends 'setup/base.html' %}
 
 {% block content %}
-<h2>Delete Agent</h2>
+<h2>Delete Physician</h2>
 <form method="POST" class="doctor-form" novalidate>{% csrf_token %}
-    <p>Are you sure you want to delete {{doctor.First_Name}} {{doctor.Last_Name}}</p>
+    <p>Are you sure you want to delete {{doctor.first_name}} {{doctor.last_name}}</p>
     <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
     <a class="btn btn-outline-secondary btn-sm" href="{% url 'doctors-detail' object.id %}">Cancel</a>
 </form>

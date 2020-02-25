@@ -12,18 +12,18 @@
             <th scope="col">Source Name</th>
             <th scope="col">Invoice#</th>
             <th scope="col">Invoice Amt</th>
-            <th scope="col">Paid Amount</th>            
+            <th scope="col">Paid amount</th>            
             <th scope="col">Date</th>            
         </tr>
     </thead>
     <tbody>
         {% for item in applypayment %}
         <tr>
-            <td><a href="{% url 'applypayments-detail' item.pk %}">{{ item.payment.Source.Name }}</a></td>
-            <td>{{ item.assessment.InvoiceNumber }}</td>
-            <td>{{ item.assessment.InvoiceTotal }}</td>
-            <td>{{ item.Amount }}</td>
-            <td>{{ item.Date }}</td>            
+            <td><a href="{% url 'applypayments-detail' item.pk %}">{{ item.payment.source.name }}</a></td>
+            <td>{{ item.assessment.invoice_number }}</td>
+            <td>{{ item.assessment.invoice_total }}</td>
+            <td>{{ item.amount }}</td>
+            <td>{{ item.date }}</td>            
         </tr>
         {% endfor %}
 

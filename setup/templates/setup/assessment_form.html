@@ -8,40 +8,34 @@
 <form method="POST" class="assessment-form" novalidate>{% csrf_token %}
     <div class="form-row">
         <div class="form-group col-md-4 mb-0">
-            {{ form.Source|as_crispy_field }}
+            {{ form.claimant|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.Report_Type|as_crispy_field }}
+            {{ form.report_type|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.Clinic|as_crispy_field }}
+            {{ form.clinic|as_crispy_field }}
         </div>
     </div>
     
     <div class="form-row">
         <div class="form-group col-md-4 mb-0">
-            {{ form.Doctor|as_crispy_field }}
+            {{ form.doctor|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.Agent|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-4 mb-0">
-            {{ form.Claimant_Name|as_crispy_field }}
+            {{ form.agent|as_crispy_field }}
         </div>
     </div>
     
     <hr>
+    
     <div class="form-row">
         <div class="form-group col-md-3 mb-0">
-            {{ form.AssessmentDate|as_crispy_field }}
+            {{ form.assessment_date|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ form.AssessmentTime|as_crispy_field }}
+            {{ form.assessment_time|as_crispy_field }}
         </div>
-        <div class="form-group col-md-3 mb-0">
-            {{ form.Claim_Number|as_crispy_field }}
-        </div>
-        
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>

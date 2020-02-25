@@ -8,47 +8,47 @@
 <form method="POST" class="agent-form" novalidate>{% csrf_token %}
     <div class="form-row">
         <div class="form-group col-md-4 mb-0">
-            {{ form.First_Name|as_crispy_field }}
+            {{ form.first_name|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.Last_Name|as_crispy_field }}
+            {{ form.last_name|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.Email|as_crispy_field }}
+            {{ form.email|as_crispy_field }}
         </div>
     </div>
-    {{ form.Address|as_crispy_field }}
+    {{ form.address|as_crispy_field }}
     <div class="form-row">
         <div class="form-group col-md-3 mb-0">
-            {{ form.Home_Phone|as_crispy_field }}
+            {{ form.home_phone|as_crispy_field }}
         </div>
         <div class="form-group col-md-3 mb-0">
-            {{ form.Mobile_Phone|as_crispy_field }}
+            {{ form.mobile_phone|as_crispy_field }}
         </div>
         <div class="form-group col-md-3 mb-0">
-            {{ form.CPSO|as_crispy_field }}
+            {{ form.cpso|as_crispy_field }}
         </div>
         <div class="form-group col-md-3 mb-0">
-            {{ form.CMPA|as_crispy_field }}
+            {{ form.cmpa|as_crispy_field }}
         </div>
     </div>
-    {{ form.Notes|as_crispy_field }}
+    {{ form.notes|as_crispy_field }}
     <hr>
     <div class="form-row">
         <div class="form-group col-md-2 mb-0">
-            {{ form.Rate_IME|as_crispy_field }}
+            {{ form.rate_ime|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ form.Rate_PR|as_crispy_field }}
+            {{ form.rate_pr|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ form.Rate_AD|as_crispy_field }}
+            {{ form.rate_ad|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ form.Rate_NS|as_crispy_field }}
+            {{ form.rate_ns|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 mb-0">
-            {{ form.Rate_EX|as_crispy_field }}
+            {{ form.rate_ex|as_crispy_field }}
         </div> 
     </div>
     <div class="form-row">

@@ -17,9 +17,9 @@
     <tbody>
         {% for item in clinics %}
         <tr>
-            <td><a href="{% url 'clinics-detail' item.pk %}">{{ item.Name }}</a></td>
-            <td>{{ item.Main_Contact }}</td>
-            <td>{{ item.Office_Phone }}</td>
+            <td><a href="{% url 'clinics-detail' item.pk %}">{{ item.name }}</a></td>
+            <td>{{ item.main_contact }}</td>
+            <td>{{ item.office_phone }}</td>
         </tr>
         {% endfor %}
 

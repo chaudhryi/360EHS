@@ -2,31 +2,31 @@
 
 {% block content %}
 
-<h4>360 Agent Detail Page for {{ agent.First_Name }} {{ agent.Last_Name }}</h4>
+<h4>360 Agent Detail Page for {{ agent.first_name }} {{ agent.last_name }}</h4>
 <a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'agents-delete' agent.id %}">Delete</a>
 <a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'agents-update' agent.id %}">Update</a>
 <hr>
 
     <div class="form-group col-md-12 mb-0">
-        <b>Agent:</b> {{ agent.First_Name }}  {{ agent.Last_Name }}
+        <b>Agent:</b> {{ agent.first_name }}  {{ agent.last_name }}
     </div>    
     <div class="form-group col-md-12 mb-0">
-        <b>Email Address:</b> {{ agent.Email }}
+        <b>Email address:</b> {{ agent.email }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Address:</b> {{ agent.Address }}
+        <b>Address:</b> {{ agent.address }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Home Phone:</b> {{ agent.Home_Phone }}
+        <b>Home Phone:</b> {{ agent.home_phone }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Mobile Phone:</b> {{ agent.Mobile_Phone }}
+        <b>Mobile Phone:</b> {{ agent.mobile_phone }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Hire Date:</b> {{ agent.Hire_Date }}
+        <b>Hire Date:</b> {{ agent.hire_date }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>NOTES:</b> {{ agent.Notes }}
+        <b>Notes:</b> {{ agent.notes }}
     </div>
 
 <hr>
@@ -40,11 +40,11 @@
       <th>EX</th>
     </tr>
     <tr>
-      <td>${{ agent.Rate_IME }}</td>
-      <td>${{ agent.Rate_PR }}</td>
-      <td>${{ agent.Rate_AD }}</td>
-      <td>${{ agent.Rate_NS }}</td>
-      <td>${{ agent.Rate_EX }}</td>
+      <td>${{ agent.rate_ime }}</td>
+      <td>${{ agent.rate_pr }}</td>
+      <td>${{ agent.rate_ad }}</td>
+      <td>${{ agent.rate_ns }}</td>
+      <td>${{ agent.rate_ex }}</td>
     </tr>
    
   </table>

@@ -2,38 +2,38 @@
 
 {% block content %}
 
-<h4>360 Assessment Detail Page for {{ assessment.Claimant_Name }} </h4>
+<h4>360 Assessment Detail Page for {{ assessment.claimant.full_name }} </h4>
 <a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'assessments-delete' assessment.id %}">Delete</a>
 <a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'assessments-update' assessment.id %}">Update</a>
 <hr>
     <div class="form-group col-md-12 mb-0">
-        <b>Source:</b> {{ assessment.Source }}  
+        <b>Source:</b> {{ assessment.claimant.source }}  
     </div> 
     <div class="form-group col-md-12 mb-0">
-        <b>Physician:</b> {{ assessment.Doctor }}  
+        <b>Physician:</b> {{ assessment.doctor }}  
     </div>    
     <div class="form-group col-md-12 mb-0">
-        <b>Clinic:</b> {{ assessment.Clinic }}
+        <b>Clinic:</b> {{ assessment.clinic }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Report Type:</b> {{ assessment.Report_Type }}
+        <b>Report Type:</b> {{ assessment.report_type }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Agent:</b> {{ assessment.Agent }}
+        <b>Agent:</b> {{ assessment.agent }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Claim Number:</b> {{ assessment.Claim_Number }}
+        <b>Claim Number:</b> {{ assessment.claimant.claim_number }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Date:</b> {{ assessment.AssessmentDate }}
+        <b>Date:</b> {{ assessment.assessment_date }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Time:</b> {{ assessment.AssessmentTime }}
+        <b>Time:</b> {{ assessment.assessment_time }}
     </div>
 <hr>
 
-{% if assessment.InvoiceNumber == None %}
-    <a class="btn btn-primary btn-sm mt=1 mb=3" href="{% url 'invoices-create' assessment.id assessment.Source.id assessment.Report_Type.id %}">Create Invoice</a>
+{% if assessment.invoice_number == None %}
+    <a class="btn btn-primary btn-sm mt=1 mb=3" href="{% url 'invoices-create' assessment.id assessment.claimant.source.id assessment.report_type.id %}">Create Invoice</a>
     <hr>
 {% else %}
 
@@ -50,11 +50,11 @@
         </thead>
         <tbody>       
             <tr>            
-                <td>{{ assessment.InvoiceNumber }}</td>
-                <td>{{ assessment.InvoiceDate }}</td>
-                <td>{{ assessment.InvoiceSubtotal }}</td>
-                <td>{{ assessment.InvoiceTax }}</td>
-                <td>{{ assessment.InvoiceTotal }}</td>
+                <td>{{ assessment.invoice_number }}</td>
+                <td>{{ assessment.invoice_date }}</td>
+                <td>{{ assessment.invoice_subtotal }}</td>
+                <td>{{ assessment.invoice_tax }}</td>
+                <td>{{ assessment.invoice_total }}</td>
             </tr>
         </tbody>
     </table>
@@ -65,17 +65,17 @@
             <tr>            
                 <th scope="col">Payment</th>
                 <th scope="col">Date</th>
-                <th scope="col">Amount</th>
+                <th scope="col">amount</th>
                 <th scope="col">Check No.</th>    
             </tr>
         </thead>
         <tbody>
             {% for item in payments %}       
             <tr>            
-                <td>{{ item.assessment.Source.Name }}</td>
-                <td>{{ item.Date }}</td>
-                <td>{{ item.Amount }}</td> 
-                <td>{{ item.payment.CheckNumber }}</td>                
+                <td>{{ item.assessment.source.name }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ item.amount }}</td> 
+                <td>{{ item.payment.check_number }}</td>                
             </tr>
             {% endfor %}
         </tbody>

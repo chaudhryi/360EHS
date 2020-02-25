@@ -10,7 +10,7 @@ class AgentForm(forms.ModelForm):
     class Meta:
         model = Agent
         fields = '__all__'
-        widgets = {'Hire_Date': DateInput()}
+        widgets = {'hire_date': DateInput()}
 
 
 class DoctorForm(forms.ModelForm):
@@ -34,22 +34,22 @@ class SourceForm(forms.ModelForm):
 class ClaimantForm(forms.ModelForm):
     class Meta:
         model = Claimant
-        exclude = ['Age', 'Full_Name']
-        widgets = {'Date_Of_Birth': DateInput(), 'Date_Of_Accident': DateInput()}
+        exclude = ['age', 'full_name']
+        widgets = {'date_of_birth': DateInput(), 'date_of_accident': DateInput()}
 
 
 class AssessmentForm(forms.ModelForm):
     class Meta:
         model = Assessment
         fields = '__all__'
-        widgets = {'AssessmentDate': DateInput()}
+        widgets = {'assessment_date': DateInput()}
 
 
 class InvoiceForm(forms.ModelForm):
     class Meta: 
         model = Assessment
-        fields = ('InvoiceNumber', 'InvoiceDate', 'InvoiceSubtotal', 'InvoiceTax', 'InvoiceTotal',) 
-        widgets = {'InvoiceDate': DateInput()}
+        fields = ('invoice_number', 'invoice_date', 'invoice_subtotal', 'invoice_tax', 'invoice_total',) 
+        widgets = {'invoice_date': DateInput()}
 
 
 class RateForm(forms.ModelForm):
@@ -62,7 +62,7 @@ class PaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
         fields = '__all__'
-        widgets = {'Date': DateInput()}
+        widgets = {'date': DateInput()}
 
 
 # class ApplyPaymentForm(forms.ModelForm):
@@ -80,6 +80,6 @@ class PaymentForm(forms.ModelForm):
 class ApplyPaymentForm(forms.ModelForm):
     class Meta:
         model = ApplyPayment
-        fields = ['Amount']        
-        widgets = {'Amount': forms.TextInput(attrs={'size': 5})}
+        fields = ['amount']        
+        widgets = {'amount': forms.TextInput(attrs={'size': 5})}
     

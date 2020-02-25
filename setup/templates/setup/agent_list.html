@@ -17,9 +17,9 @@
     <tbody>
         {% for item in agents %}
         <tr>
-            <td><a href="{% url 'agents-detail' item.pk %}">{{ item.First_Name }} {{ item.Last_Name }}</a></td>
-            <td>{{ item.Email }}</td>
-            <td>{{ item.Mobile_Phone }}</td>
+            <td><a href="{% url 'agents-detail' item.pk %}">{{ item.first_name }} {{ item.last_name }}</a></td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.mobile_phone }}</td>
         </tr>
         {% endfor %}
 

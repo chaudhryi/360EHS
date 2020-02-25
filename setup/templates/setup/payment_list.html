@@ -20,10 +20,10 @@
     <tbody>
         {% for item in payment %}
         <tr>
-            <td>{{ item.Source.Name }}</td>
-            <td>${{ item.Amount }}</td>
-            <td>{{ item.CheckNumber }}</td>
-            <td>{{ item.Date }}</td>
+            <td>{{ item.source.name }}</td>
+            <td>${{ item.amount }}</td>
+            <td>{{ item.check_number }}</td>
+            <td>{{ item.date }}</td>
             <td><a class="material-icons" href="{% url 'process' item.pk %}">add</a></td> 
             <td><a class="material-icons" href="{% url 'payments-detail' item.pk %}">edit</a></td>            
         </tr>

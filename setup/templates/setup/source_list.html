@@ -17,9 +17,9 @@
     <tbody>
         {% for item in sources %}
         <tr>
-            <td><a href="{% url 'sources-detail' item.pk %}">{{ item.Name }}</a></td>
-            <td>{{ item.Main_Contact }}</td>
-            <td>{{ item.Contact_Phone }}</td>
+            <td><a href="{% url 'sources-detail' item.pk %}">{{ item.name }}</a></td>
+            <td>{{ item.main_contact }}</td>
+            <td>{{ item.contact_phone }}</td>
         </tr>
         {% endfor %}
 

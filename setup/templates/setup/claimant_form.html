@@ -8,13 +8,13 @@
 <form method="POST" class="claimant-form" novalidate>{% csrf_token %}
     <div class="form-row">
         <div class="form-group col-md-4 mb-0">
-            {{ form.Title|as_crispy_field }}
+            {{ form.title|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.First_Name|as_crispy_field }}
+            {{ form.first_name|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.Last_Name|as_crispy_field }}
+            {{ form.last_name|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
             {{ form.source|as_crispy_field }}
@@ -23,13 +23,13 @@
     
     <div class="form-row">
         <div class="form-group col-md-4 mb-0">
-            {{ form.Date_Of_Birth|as_crispy_field }}
+            {{ form.date_of_birth|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.Claim_Number|as_crispy_field }}
+            {{ form.claim_number|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.Date_Of_Accident|as_crispy_field }}
+            {{ form.date_of_accident|as_crispy_field }}
         </div>
     </div>
     
