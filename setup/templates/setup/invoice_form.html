@@ -33,9 +33,9 @@
 
 <script>
 
-  document.getElementById("id_invoice_subtotal").value = {{hold.amount}};
-  document.getElementById("id_invoice_tax").value = ({{hold.amount}}/100) * 13;
-  document.getElementById("id_invoice_total").value = {{hold.amount}} + ({{hold.amount}}/100) * 13;
+  document.getElementById("id_invoice_subtotal").value = {{ hold.amount }};
+  document.getElementById("id_invoice_tax").value = ({{ hold.amount }}/100) * 13;
+  document.getElementById("id_invoice_total").value = {{ hold.amount }} + ({{ hold.amount }}/100) * 13;
 
 </script>
 {% endblock content%}
