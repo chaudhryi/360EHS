@@ -5,6 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from datetime import date
 from django.contrib import messages
 from django.db.models import Sum
+from decimal import Decimal
 
 
 
@@ -416,7 +417,7 @@ def CreateDoctorInvoice(assessment_id):
 
 def CreateAgentInvoice(assessment_id):
     assessment = Assessment.objects.get(id=assessment_id)
-    abr = assessment.report_type.Abbreviation
+    abr = assessment.report_type.abbreviation
     if abr == 'IME':
         bill = assessment.agent.rate_ime
     elif abr == 'AD':
@@ -448,7 +449,7 @@ def CreateClinicInvoice(assessment_id):
     return
 
 
-def invoice_paidSwitch(invoice_id):
+def InvoicePaidSwitch(invoice_id):
     invoice = Assessment.objects.get(id=invoice_id)
     invoice_total = invoice.invoice_total    
     applied_invoices = ApplyPayment.objects.filter(assessment=invoice_id)    
@@ -534,43 +535,40 @@ def ProcessPayment(request, pk):
     applied = ApplyPayment.objects.filter(payment=pk)
     
     if applied:
-        total_applied = applied.aggregate(Sum('amount'))
-        subtract = total_applied["amount__sum"]
+        total_applied = applied.aggregate(Sum('amount'))["amount__sum"]
     else:
-        subtract = 0    
+        total_applied = 0    
 
-    balance = sourcepayment.amount - subtract
+    balance = sourcepayment.amount - total_applied
 
     if request.method == 'POST':
-        # Create a form instance and populate it with data from the request (binding):
-        form = ApplyPaymentForm(request.POST)
-        # Check if the form is valid:
-        if form.is_valid():
-            applypayment_assessment = form.cleaned_data['assessment']
-            x = form.cleaned_data['amount']            
-            z = Assessment.objects.get(id=applypayment_assessment.id).invoice_total          
+        invoice_id=request.POST.get('invoice_id')
+        amount = Decimal(request.POST.get('amount'))
+        assessment = Assessment.objects.get(id=invoice_id)
 
-            if x > z:
-                messages.error(request, 'Applied amount cannot be higher than invoice amount')
-                return redirect('process', pk)
-            
-            form.save()                        
-            invoice_paidSwitch(applypayment_assessment.id)            
-            return redirect('process', pk)           
-
-    # If this is a GET (or any other method) create the default form.
-    else:
-        form = ApplyPaymentForm()
-
+        if amount > assessment.invoice_total:
+            messages.error(request, 'Applied amount cannot be higher than invoice amount')
+            return redirect('process', pk)
+        
+        if amount < assessment.invoice_total:
+            messages.warning(request, 'Partial Payment Applied')
+            applypayment = ApplyPayment(assessment=assessment, payment=sourcepayment, amount=amount)
+            applypayment.save()
+            return redirect('process', pk)
+        
+        if amount == assessment.invoice_total:
+            messages.info(request, 'Applied')
+            applypayment = ApplyPayment(assessment=assessment, payment=sourcepayment, amount=amount)
+            applypayment.save()
+            InvoicePaidSwitch(invoice_id)
+            return redirect('process', pk)
 
     context = {
-        'form': form,
         'openinvoices': openinvoices,
         'closedinvoices': closedinvoices,
         'payment': sourcepayment,
-        'total_applied': subtract,
+        'total_applied': total_applied,
         'balance': balance,        
-                
     }       
     return render(request, 'setup/processpayment.html', context)
 

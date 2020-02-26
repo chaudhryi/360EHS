@@ -14,8 +14,25 @@
     
 </h6>
 <hr>
+<div>
+    {% if messages %}
+    {% for message in messages %}
 
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <font size="2" color="red">  {{ message }}</font>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+        <font size="2" color="green">  {{ message }}</font>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+        <font size="2" color="blue">  {{ message }}</font>
+    {% endif %}
+
+    {% endfor %}
+    {% endif %}
+</div>
 <h5>UnApplied Invoices</h5>
+
 <table class="table table-sm table-striped">
     <thead class="thead-dark">
         <tr>
@@ -40,6 +57,7 @@
             <td>
                 <form method="POST" class="payment-form" novalidate>{% csrf_token %}
                     <input type="text" size="5" name="amount" value="{{ invoice.invoice_total }}">
+                    <input type="hidden" name="invoice_id" value="{{ invoice.id }}">
                     <button class="btn btn-outline-primary btn-sm" type="submit">Apply</button>
                 </form>
             </td>

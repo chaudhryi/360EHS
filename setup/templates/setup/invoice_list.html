@@ -36,7 +36,7 @@
         {% for item in invoices %}
         <tr>
             <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.invoice_number }}</a></td>
-            <td>{{ item.source.name }}</td>
+            <td>{{ item.claimant.source }}</td>
             <td>{{ item.invoice_date }}</td>
             <td>{{ item.invoice_subtotal }}</td>
             <td>{{ item.invoice_tax }}</td>

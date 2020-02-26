@@ -23,8 +23,8 @@
     <tbody>
         {% for item in assessments %}
         <tr>
-            <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.source }} - {{ item.report_type.abbreviation }}</a></td>
-            <td>{{ item.claimant_name }}</td>
+            <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.claimant.source }} - {{ item.report_type.abbreviation }}</a></td>
+            <td>{{ item.claimant.full_name }}</td>
             <td>{{ item.doctor }}</td>            
             <td>{{ item.assessment_date }}</td>
             <td>{{ item.assessment_time }}</td>

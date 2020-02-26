@@ -165,7 +165,7 @@ class Assessment(models.Model):
     invoice_paid = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.claimant
+        return self.claimant.full_name
     
     def get_absolute_url(self):
         return reverse('assessments-detail', kwargs={'pk': self.pk})
@@ -182,7 +182,7 @@ class ApplyPayment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.assessment.claimant_name + " " + self.payment.check_number
+        return self.assessment.claimant.full_name + " " + self.payment.check_number
     
     def get_absolute_url(self):
         return reverse('applypayments-detail', kwargs={'pk': self.pk})
