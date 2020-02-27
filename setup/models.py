@@ -71,6 +71,7 @@ class Source(models.Model):
     billing_email = models.EmailField(max_length=254, blank=True, null=True)
     billing_phone = PhoneField(blank=True, help_text='Billing Contact phone number')
     notes = models.CharField(max_length=250, blank=True, null=True)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
         return self.name

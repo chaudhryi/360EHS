@@ -269,9 +269,7 @@ class InvoiceDetailView(DetailView):
 
 def increment_invoice_number():
     assessment = Assessment.objects.all().order_by('-id')
-    last_invoice = assessment[1]
-     
-    print(last_invoice)
+    last_invoice = assessment[1]    
     if not last_invoice:
          return 'EHS-1'
     invoice_no = last_invoice.invoice_number

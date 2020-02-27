@@ -2,7 +2,10 @@
 
 {% block content %}
 
-<h4>360EHS Source Company Detail Page for {{ source.name }}</h4>
+{% if source.image %}
+    <img src="{{ source.image.url }}" width=300px height=65px alt="{{ source.name }}">
+{% endif %}
+<hr>
 <a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'sources-delete' source.id %}">Delete</a>
 <a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'sources-update' source.id %}">Update</a>
 <hr>
