@@ -267,11 +267,26 @@ class InvoiceDetailView(DetailView):
     context_object_name = 'invoice'
 
 
+def increment_invoice_number():
+    assessment = Assessment.objects.all().order_by('-id')
+    last_invoice = assessment[1]
+     
+    print(last_invoice)
+    if not last_invoice:
+         return 'EHS-1'
+    invoice_no = last_invoice.invoice_number
+    invoice_int = int(invoice_no.split('EHS-')[-1])
+    new_invoice_int = invoice_int + 1
+    new_invoice_no = 'EHS-' + str(new_invoice_int)
+    return new_invoice_no
+
 class InvoiceCreateView(UpdateView):
     model = Assessment
     template_name = 'setup/invoice_form.html'
     form_class = InvoiceForm
-    # initial = {"invoice_subtotal": '500'}
+    initial = {"invoice_number": increment_invoice_number,
+               "invoice_date": date.today()
+               }
     
     def get_context_data(self, *args, **kwargs):
         context = super(InvoiceCreateView, self).get_context_data(**kwargs) 
@@ -457,14 +472,69 @@ def InvoicePaidSwitch(invoice_id):
        
     if invoice_total == applied_total:
         invoice.invoice_paid = True
-        CreateDoctorInvoice(invoice_id)
-        CreateAgentInvoice(invoice_id)
-        CreateClinicInvoice(invoice_id)
+        # CreateDoctorInvoice(invoice_id)
+        # CreateAgentInvoice(invoice_id)
+        # CreateClinicInvoice(invoice_id)
     else:
         invoice.invoice_paid = False
     invoice.save()    
     return  
     
+def InvoiceBalance(invoice_id, applypayment_id):
+    pass
+    return
+
+
+def ProcessPayment(request, pk):
+    sourcepayment = Payment.objects.get(id=pk)
+
+    openinvoices = Assessment.objects.filter(claimant__source=sourcepayment.source, invoice_paid = False)
+    closedinvoices = Assessment.objects.filter(claimant__source=sourcepayment.source, invoice_paid = True)
+
+    applied = ApplyPayment.objects.filter(payment=pk)
+    
+    if applied:
+        total_applied = applied.aggregate(Sum('amount'))["amount__sum"]
+    else:
+        total_applied = 0    
+
+    balance = sourcepayment.amount - total_applied
+
+    if request.method == 'POST':
+        invoice_id=request.POST.get('invoice_id')
+        amount = Decimal(request.POST.get('amount'))
+        if amount > balance:
+            messages.error(request, 'Applied amount is greater than Balance remaining')
+            return redirect('process', pk)
+
+        assessment = Assessment.objects.get(id=invoice_id)
+
+        if amount > assessment.invoice_total:
+            messages.error(request, 'Applied amount cannot be higher than invoice amount')
+            return redirect('process', pk)
+        
+        if amount < assessment.invoice_total:
+            messages.warning(request, 'Partial Payment Applied')
+            applypayment = ApplyPayment(assessment=assessment, payment=sourcepayment, amount=amount)
+            applypayment.save()
+            return redirect('process', pk)
+        
+        if amount == assessment.invoice_total:
+            messages.info(request, 'Applied')
+            applypayment = ApplyPayment(assessment=assessment, payment=sourcepayment, amount=amount)
+            applypayment.save()
+            InvoicePaidSwitch(invoice_id)
+            return redirect('process', pk)
+
+    context = {
+        'openinvoices': openinvoices,
+        'closedinvoices': closedinvoices,
+        'payment': sourcepayment,
+        'total_applied': total_applied,
+        'balance': balance,        
+    }       
+    return render(request, 'setup/processpayment.html', context)
+
 
 # def ProcessPayment(request, pk): #pk is the Source Payment cheque id
 #     #initialize search string to a blank, as there is no search at the start and this is being passed in the context    
@@ -525,52 +595,3 @@ def InvoicePaidSwitch(invoice_id):
 #         'total_applied': total_applied
 #     }       
 #     return render(request, 'setup/processpayment.html', context)
-
-def ProcessPayment(request, pk):
-    sourcepayment = Payment.objects.get(id=pk)
-
-    openinvoices = Assessment.objects.filter(claimant__source=sourcepayment.source, invoice_paid = False)
-    closedinvoices = Assessment.objects.filter(claimant__source=sourcepayment.source, invoice_paid = True)
-
-    applied = ApplyPayment.objects.filter(payment=pk)
-    
-    if applied:
-        total_applied = applied.aggregate(Sum('amount'))["amount__sum"]
-    else:
-        total_applied = 0    
-
-    balance = sourcepayment.amount - total_applied
-
-    if request.method == 'POST':
-        invoice_id=request.POST.get('invoice_id')
-        amount = Decimal(request.POST.get('amount'))
-        assessment = Assessment.objects.get(id=invoice_id)
-
-        if amount > assessment.invoice_total:
-            messages.error(request, 'Applied amount cannot be higher than invoice amount')
-            return redirect('process', pk)
-        
-        if amount < assessment.invoice_total:
-            messages.warning(request, 'Partial Payment Applied')
-            applypayment = ApplyPayment(assessment=assessment, payment=sourcepayment, amount=amount)
-            applypayment.save()
-            return redirect('process', pk)
-        
-        if amount == assessment.invoice_total:
-            messages.info(request, 'Applied')
-            applypayment = ApplyPayment(assessment=assessment, payment=sourcepayment, amount=amount)
-            applypayment.save()
-            InvoicePaidSwitch(invoice_id)
-            return redirect('process', pk)
-
-    context = {
-        'openinvoices': openinvoices,
-        'closedinvoices': closedinvoices,
-        'payment': sourcepayment,
-        'total_applied': total_applied,
-        'balance': balance,        
-    }       
-    return render(request, 'setup/processpayment.html', context)
-
-
-    
