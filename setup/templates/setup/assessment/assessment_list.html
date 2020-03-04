@@ -11,7 +11,7 @@
 <table id="table_id" class="cell-border compact stripe">
     <thead class="thead-dark">
         <tr>
-            <th scope="col">Report</th>
+            
             <th scope="col">Claimant</th>
             <th scope="col">Doctor</th>            
             <th scope="col">Date</th>
@@ -23,11 +23,10 @@
     <tbody>
         {% for item in assessments %}
         <tr>
-            <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.claimant.source }} - {{ item.report_type.abbreviation }}</a></td>
-            <td>{{ item.claimant.full_name }}</td>
+            <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.claimant.full_name }}</a></td>
             <td>{{ item.doctor }}</td>            
-            <td>{{ item.assessment_date }}</td>
-            <td>{{ item.assessment_time }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.time }}</td>
             <td>{{ item.clinic }}</td>
             <td><a class="btn btn-outline-primary btn-sm" href="{% url 'invoices-update' item.pk %}">+Invoice</a></td>
         </tr>

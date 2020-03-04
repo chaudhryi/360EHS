@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AgentListView, AgentDetailView, AgentCreateView, AgentUpdateView, AgentDeleteView, DoctorListView, DoctorDetailView, DoctorCreateView, DoctorUpdateView, DoctorDeleteView, ClinicListView, ClinicCreateView, ClinicDetailView, ClinicUpdateView, ClinicDeleteView, SourceListView, SourceCreateView, SourceDetailView, SourceUpdateView, SourceDeleteView, AssessmentListView, AssessmentCreateView, AssessmentDetailView, AssessmentUpdateView, AssessmentDeleteView, InvoiceListView, InvoiceCreateView, InvoiceDetailView, InvoiceUpdateView, RateListView, RateDetailView, RateCreateView,RateUpdateView, RateDeleteView, PaymentListView, PaymentDetailView, PaymentCreateView, PaymentUpdateView, PaymentDeleteView, ApplyPaymentListView, ApplyPaymentDetailView, ApplyPaymentCreateView, ApplyPaymentUpdateView, ApplyPaymentDeleteView, ProcessPayment, ClaimantListView, ClaimantDetailView, ClaimantCreateView, ClaimantUpdateView, ClaimantDeleteView
+from .views import AgentListView, AgentDetailView, AgentCreateView, AgentUpdateView, AgentDeleteView, DoctorListView, DoctorDetailView, DoctorCreateView, DoctorUpdateView, DoctorDeleteView, ClinicListView, ClinicCreateView, ClinicDetailView, ClinicUpdateView, ClinicDeleteView, SourceListView, SourceCreateView, SourceDetailView, SourceUpdateView, SourceDeleteView, AssessmentListView, AssessmentCreateView, AssessmentDetailView, AssessmentUpdateView, AssessmentDeleteView, InvoiceListView, InvoiceCreate, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView, RateListView, RateDetailView, RateCreateView,RateUpdateView, RateDeleteView, SourcePaymentListView, SourcePaymentDetailView, SourcePaymentCreateView, SourcePaymentUpdateView, SourcePaymentDeleteView, ApplyPaymentListView, ApplyPaymentDetailView, ApplyPaymentCreateView, ApplyPaymentUpdateView, ApplyPaymentDeleteView, ProcessPayment, ClaimantListView, ClaimantDetailView, ClaimantCreateView, ClaimantUpdateView, ClaimantDeleteView
 from . import views
 
 
@@ -52,9 +52,11 @@ urlpatterns = [
 
 #---------------Invoice URLs-----------------------------------------
     path('invoices/', InvoiceListView.as_view(), name='invoices-list'),
+    # path('invoices/new/', InvoiceCreateView.as_view(), name='invoices-new'),
+    path('invoices/new/', views.InvoiceCreate, name='invoices-new'),
     path('invoices/<int:pk>/', InvoiceDetailView.as_view(), name='invoices-detail'),       
     path('invoices/<int:pk>/update/', InvoiceUpdateView.as_view(), name='invoices-update'),
-    path('invoices/<int:pk>/<int:source_pk>/<int:report_pk>/create/', InvoiceCreateView.as_view(), name='invoices-create'),
+    path('invoices/<int:pk>/delete/', InvoiceDeleteView.as_view(), name='invoices-delete'),
 
 #---------------Rates URLs-------------------------------------------  
     path('rates/', RateListView.as_view(), name='rates-list'),
@@ -63,12 +65,12 @@ urlpatterns = [
     path('rates/<int:pk>/update/', RateUpdateView.as_view(), name='rates-update'),
     path('rates/<int:pk>/delete/', RateDeleteView.as_view(), name='rates-delete'),
 
-#---------------Payments URLs-------------------------------------------  
-    path('payments/', PaymentListView.as_view(), name='payments-list'),
-    path('payments/new/', PaymentCreateView.as_view(), name='payments-new'),
-    path('payments/<int:pk>/', PaymentDetailView.as_view(), name='payments-detail'),
-    path('payments/<int:pk>/update/', PaymentUpdateView.as_view(), name='payments-update'),
-    path('payments/<int:pk>/delete/', PaymentDeleteView.as_view(), name='payments-delete'),
+#---------------SourcePayments URLs-------------------------------------------  
+    path('sourcepayments/', SourcePaymentListView.as_view(), name='sourcepayments-list'),
+    path('sourcepayments/new/', SourcePaymentCreateView.as_view(), name='sourcepayments-new'),
+    path('sourcepayments/<int:pk>/', SourcePaymentDetailView.as_view(), name='sourcepayments-detail'),
+    path('sourcepayments/<int:pk>/update/', SourcePaymentUpdateView.as_view(), name='sourcepayments-update'),
+    path('sourcepayments/<int:pk>/delete/', SourcePaymentDeleteView.as_view(), name='sourcepayments-delete'),
 
 #---------------ApplyPayments URLs-------------------------------------------  
     path('applypayments/', ApplyPaymentListView.as_view(), name='applypayments-list'),

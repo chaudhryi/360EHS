@@ -23,6 +23,7 @@
     <thead class="thead-dark">
         <tr>
             <th scope="col">Invoice#</th>
+            <th scope="col">Claimant</th>
             <th scope="col">Source</th>
             <th scope="col">Date</th>
             <th scope="col">Subtotal</th>
@@ -35,13 +36,14 @@
     <tbody>
         {% for item in invoices %}
         <tr>
-            <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.invoice_number }}</a></td>
-            <td>{{ item.claimant.source }}</td>
-            <td>{{ item.invoice_date }}</td>
-            <td>{{ item.invoice_subtotal }}</td>
-            <td>{{ item.invoice_tax }}</td>
-            <td>{{ item.invoice_total }}</td>
-            <td>{% if item.invoice_paid == True %}
+            <td><a href="{% url 'invoices-detail' item.pk %}">{{ item.number }}</a></td>
+            <td>{{ item.assessment.claimant.full_name }}</td>
+            <td>{{ item.assessment.claimant.source }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.subtotal }}</td>
+            <td>{{ item.tax }}</td>
+            <td>{{ item.total }}</td>
+            <td>{% if item.paid == True %}
                 <font color="green">PAID</font></span>
                 {% else %}
                 <font color="red">OUTSTANDING</font></span>

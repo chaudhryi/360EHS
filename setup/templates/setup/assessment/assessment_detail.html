@@ -15,9 +15,7 @@
     <div class="form-group col-md-12 mb-0">
         <b>Clinic:</b> {{ assessment.clinic }}
     </div>
-    <div class="form-group col-md-12 mb-0">
-        <b>Report Type:</b> {{ assessment.report_type }}
-    </div>
+    
     <div class="form-group col-md-12 mb-0">
         <b>Agent:</b> {{ assessment.agent }}
     </div>
@@ -25,18 +23,24 @@
         <b>Claim Number:</b> {{ assessment.claimant.claim_number }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Date:</b> {{ assessment.assessment_date }}
+        <b>Date:</b> {{ assessment.date }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Time:</b> {{ assessment.assessment_time }}
+        <b>Time:</b> {{ assessment.time }}
     </div>
 <hr>
-
-{% if assessment.invoice_number == None %}
-    <a class="btn btn-primary btn-sm mt=1 mb=3" href="{% url 'invoices-create' assessment.id assessment.claimant.source.id assessment.report_type.id %}">Create Invoice</a>
-    <hr>
-{% else %}
-
+<form method="GET" action="{% url 'invoices-new' %}" class="payment-form" novalidate>{% csrf_token %}
+    <select name="reporttype_id">
+        {% for instance in reporttypes %}
+            <option value="{{ instance.pk }}">{{ instance.description }} </option>
+        {% endfor %}
+    </select>    
+    <input type="hidden" name="source_id" value="{{ assessment.claimant.source.id }}">
+    <input type="hidden" name="assessment_id" value="{{ assessment.id }}">   
+    <button class="btn btn-primary btn-sm mt=1 mb=3" type="submit">Create Invoice</button>
+</form>
+ 
+ <hr>
 
     <table class="table table-sm table-striped">
         <thead class="thead-dark">
@@ -48,14 +52,16 @@
                 <th scope="col">Total</th>
             </tr>
         </thead>
-        <tbody>       
-            <tr>            
-                <td>{{ assessment.invoice_number }}</td>
-                <td>{{ assessment.invoice_date }}</td>
-                <td>{{ assessment.invoice_subtotal }}</td>
-                <td>{{ assessment.invoice_tax }}</td>
-                <td>{{ assessment.invoice_total }}</td>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.number }}</td>
+                <td>{{ invoice.date }}</td>
+                <td>{{ invoice.subtotal }}</td>
+                <td>{{ invoice.tax }}</td>
+                <td>{{ invoice.total }}</td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 
@@ -72,15 +78,16 @@
         <tbody>
             {% for item in payments %}       
             <tr>            
-                <td>{{ item.assessment.source.name }}</td>
+                <td>{{ item.assessment.claimant.source.name }}</td>
                 <td>{{ item.date }}</td>
                 <td>{{ item.amount }}</td> 
                 <td>{{ item.payment.check_number }}</td>                
-            </tr>
+            </tr>            
             {% endfor %}
+            
         </tbody>
     </table>
-{% endif %} 
+ 
 
 {% endblock content %}
 

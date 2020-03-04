@@ -3,6 +3,7 @@ from django.urls import reverse
 from phone_field import PhoneField
 from datetime import date, datetime
 from decimal import Decimal
+from django.db.models import Sum
 
 
 class ReportType(models.Model):
@@ -134,36 +135,14 @@ class Claimant(models.Model):
     def get_absolute_url(self):
         return reverse('claimants-detail', kwargs={'pk': self.pk})
 
-
-class Payment(models.Model):
-    source = models.ForeignKey(Source, on_delete = models.CASCADE, null=True, blank=True)
-    amount = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    date = models.DateField(null=True, blank=True)
-    check_number = models.CharField(max_length=20, null=True, blank=True)
-    applied_balance = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    applied = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.source.name + " " + self.check_number
-    
-    def get_absolute_url(self):
-        return reverse('payments-detail', kwargs={'pk': self.pk})
-
     
 class Assessment(models.Model):
-    claimant = models.ForeignKey(Claimant, on_delete = models.CASCADE)
-    report_type = models.ForeignKey(ReportType, on_delete=models.CASCADE, null=True, blank=True)
+    claimant = models.ForeignKey(Claimant, on_delete = models.CASCADE)    
     clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE, blank=True, null=True)
-    assessment_date = models.DateField(null=True, blank=True)
-    assessment_time = models.TimeField(null=True, blank=True)
-    invoice_number = models.CharField(max_length=100, null=True, blank=True)
-    invoice_date = models.DateField(null=True, blank=True)
-    invoice_subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    invoice_tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    invoice_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)    
-    invoice_paid = models.BooleanField(default=False)
+    date = models.DateField(null=True, blank=True)
+    time = models.TimeField(null=True, blank=True)
 
     def __str__(self):
         return self.claimant.full_name
@@ -172,9 +151,42 @@ class Assessment(models.Model):
         return reverse('assessments-detail', kwargs={'pk': self.pk})
 
 
+class Invoice(models.Model):
+    assessment = models.ForeignKey(Assessment, on_delete = models.CASCADE)
+    report_type = models.ForeignKey(ReportType, on_delete=models.CASCADE, null=True, blank=True)
+    number = models.CharField(max_length=100, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)    
+    balance = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    paid = models.BooleanField(default=False)
+        
+    def __str__(self):
+        return self.assessment.claimant.full_name + " " + self.number
+    
+    def get_absolute_url(self):
+        return reverse('invoices-detail', kwargs={'pk': self.pk})
+
+
+class SourcePayment(models.Model):
+    source = models.ForeignKey(Source, on_delete = models.CASCADE, null=True, blank=True)
+    amount = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    date = models.DateField(null=True, blank=True)
+    reference_number = models.CharField(max_length=20, null=True, blank=True)
+    applied_balance = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    applied = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.source.name + " " + self.reference_number
+    
+    def get_absolute_url(self):
+        return reverse('sourcepayments-detail', kwargs={'pk': self.pk})
+
+
 class ApplyPayment(models.Model):
     assessment = models.ForeignKey(Assessment, on_delete = models.CASCADE)
-    payment = models.ForeignKey(Payment, on_delete = models.CASCADE)
+    payment = models.ForeignKey(SourcePayment, on_delete = models.CASCADE)
     date = models.DateField(null=True, blank=True)
     amount = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 

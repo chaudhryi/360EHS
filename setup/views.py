@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Assessment, Doctor, Clinic, Agent, Source, Rate, Payment, ApplyPayment, DoctorBill, AgentBill, ClinicBill, Claimant
-from .forms import AgentForm, DoctorForm, ClinicForm, SourceForm, AssessmentForm, InvoiceForm, RateForm, PaymentForm, ApplyPaymentForm, ClaimantForm
+from .models import Assessment, Doctor, Clinic, Agent, Source, Rate, SourcePayment, ApplyPayment, DoctorBill, AgentBill, ClinicBill, Claimant, Invoice, ReportType
+from .forms import AgentForm, DoctorForm, ClinicForm, SourceForm, AssessmentForm, InvoiceForm, RateForm, SourcePaymentForm, ApplyPaymentForm, ClaimantForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from datetime import date
 from django.contrib import messages
@@ -27,32 +27,32 @@ def Contact(request):
 class AgentListView(ListView):
     model = Agent
     form_class = AgentForm
-    template_name = 'setup/agent_list.html'
+    template_name = 'setup/agent/agent_list.html'
     context_object_name = 'agents'
 
 
 class AgentDetailView(DetailView):
     model = Agent
-    template_name = 'setup/agent_detail.html'
+    template_name = 'setup/agent/agent_detail.html'
     context_object_name = 'agent'
 
 
 class AgentCreateView(CreateView):
     model = Agent
-    template_name = 'setup/agent_form.html'
+    template_name = 'setup/agent/agent_form.html'
     form_class = AgentForm
     #initial = {"email": "Ijaz email"}
     
 
 class AgentUpdateView(UpdateView):
     model = Agent
-    template_name = 'setup/agent_form.html'
+    template_name = 'setup/agent/agent_form.html'
     form_class = AgentForm
     
 
 class AgentDeleteView(DeleteView):
     model = Agent
-    template_name = 'setup/agent_confirm_delete.html'
+    template_name = 'setup/agent/agent_confirm_delete.html'
     context_object_name = 'agent'
     success_url = '/agents/'
     
@@ -63,31 +63,31 @@ class AgentDeleteView(DeleteView):
 class DoctorListView(ListView):
     model = Doctor
     form_class = DoctorForm
-    template_name = 'setup/doctor_list.html'
+    template_name = 'setup/doctor/doctor_list.html'
     context_object_name = 'doctors'
 
 
 class DoctorDetailView(DetailView):
     model = Doctor
-    template_name = 'setup/doctor_detail.html'
+    template_name = 'setup/doctor/doctor_detail.html'
     context_object_name = 'doctor'
 
 
 class DoctorCreateView(CreateView):
     model = Doctor
-    template_name = 'setup/doctor_form.html'
+    template_name = 'setup/doctor/doctor_form.html'
     form_class = DoctorForm
     
 
 class DoctorUpdateView(UpdateView):
     model = Doctor
+    template_name = 'setup/doctor/doctor_form.html'
     form_class = DoctorForm
-    # will use doctor_form.html template as default
-
+    
 
 class DoctorDeleteView(DeleteView):
     model = Doctor
-    template_name = 'setup/doctor_confirm_delete.html'
+    template_name = 'setup/doctor/doctor_confirm_delete.html'
     success_url = '/doctors/'
     context_object_name = 'doctor'
 
@@ -97,31 +97,31 @@ class DoctorDeleteView(DeleteView):
 class ClinicListView(ListView):
     model = Clinic
     form_class = ClinicForm
-    template_name = 'setup/clinic_list.html'
+    template_name = 'setup/clinic/clinic_list.html'
     context_object_name = 'clinics'
 
 
 class ClinicDetailView(DetailView):
     model = Clinic
-    template_name = 'setup/clinic_detail.html'
+    template_name = 'setup/clinic/clinic_detail.html'
     context_object_name = 'clinic'
 
 
 class ClinicCreateView(CreateView):
     model = Clinic
-    template_name = 'setup/clinic_form.html'
+    template_name = 'setup/clinic/clinic_form.html'
     form_class = ClinicForm
     
 
 class ClinicUpdateView(UpdateView):
     model = Clinic
-    template_name = 'setup/clinic_form.html'
+    template_name = 'setup/clinic/clinic_form.html'
     form_class = ClinicForm
     
 
 class ClinicDeleteView(DeleteView):
     model = Clinic
-    template_name = 'setup/clinic_confirm_delete.html'
+    template_name = 'setup/clinic/clinic_confirm_delete.html'
     success_url = '/clinics/'
     context_object_name = 'clinic'
     
@@ -131,13 +131,13 @@ class ClinicDeleteView(DeleteView):
 class SourceListView(ListView):
     model = Source
     form_class = SourceForm
-    template_name = 'setup/source_list.html'
+    template_name = 'setup/source/source_list.html'
     context_object_name = 'sources'
 
 
 class SourceDetailView(DetailView):
     model = Source
-    template_name = 'setup/source_detail.html'
+    template_name = 'setup/source/source_detail.html'
     context_object_name = 'source'
 
     def get_context_data(self, *args, **kwargs):
@@ -150,19 +150,19 @@ class SourceDetailView(DetailView):
 
 class SourceCreateView(CreateView):
     model = Source
-    template_name = 'setup/source_form.html'
+    template_name = 'setup/source/source_form.html'
     form_class = SourceForm
     
 
 class SourceUpdateView(UpdateView):
     model = Source
-    template_name = 'setup/source_form.html'
+    template_name = 'setup/source/source_form.html'
     form_class = SourceForm
     
 
 class SourceDeleteView(DeleteView):
     model = Source
-    template_name = 'setup/source_confirm_delete.html'
+    template_name = 'setup/source/source_confirm_delete.html'
     success_url = '/sources/'
     context_object_name = 'source'
 
@@ -173,31 +173,31 @@ class SourceDeleteView(DeleteView):
 class ClaimantListView(ListView):
     model = Claimant
     form_class = ClaimantForm
-    template_name = 'setup/claimant_list.html'
+    template_name = 'setup/claimant/claimant_list.html'
     context_object_name = 'claimants'
 
 
 class ClaimantDetailView(DetailView):
     model = Claimant
-    template_name = 'setup/claimant_detail.html'
+    template_name = 'setup/claimant/claimant_detail.html'
     context_object_name = 'claimant'
 
 
 class ClaimantCreateView(CreateView):
     model = Claimant
-    template_name = 'setup/claimant_form.html'
+    template_name = 'setup/claimant/claimant_form.html'
     form_class = ClaimantForm  
     
 
 class ClaimantUpdateView(UpdateView):
     model = Claimant
-    template_name = 'setup/claimant_form.html'
+    template_name = 'setup/claimant/claimant_form.html'
     form_class = ClaimantForm
     
 
 class ClaimantDeleteView(DeleteView):
     model = Claimant
-    template_name = 'setup/claimant_confirm_delete.html'
+    template_name = 'setup/claimant/claimant_confirm_delete.html'
     context_object_name = 'claimant'
     success_url = '/claimants/'
 
@@ -206,98 +206,107 @@ class ClaimantDeleteView(DeleteView):
 class AssessmentListView(ListView):
     model = Assessment
     form_class = AssessmentForm
-    template_name = 'setup/assessment_list.html'
+    template_name = 'setup/assessment/assessment_list.html'
     context_object_name = 'assessments'
 
     
 class AssessmentDetailView(DetailView):
     model = Assessment
-    template_name = 'setup/assessment_detail.html'
+    template_name = 'setup/assessment/assessment_detail.html'
     context_object_name = 'assessment'
 
     def get_context_data(self, *args, **kwargs):
         context = super(AssessmentDetailView, self).get_context_data(*args, **kwargs)
         #context['rates'] = self.object.rate_set.all().order_by('-amount')  **THis also does the same thing
-        #context['invoices'] = Invoice.objects.all().filter(Assessment=self.object).order_by('-Date')
-        context['payments'] = ApplyPayment.objects.filter(assessment=self.kwargs['pk'])   
+        context['invoices'] = Invoice.objects.all().filter(assessment=self.object).order_by('-date')
+        context['payments'] = ApplyPayment.objects.filter(assessment=self.kwargs['pk'])
+        context['reporttypes'] = ReportType.objects.all()        
         return context
 
     
 class AssessmentCreateView(CreateView):
     model = Assessment
-    template_name = 'setup/assessment_form.html'
+    template_name = 'setup/assessment/assessment_form.html'
     form_class = AssessmentForm     
     
 
 class AssessmentUpdateView(UpdateView):
     model = Assessment
-    template_name = 'setup/assessment_form.html'
+    template_name = 'setup/assessment/assessment_form.html'
     form_class = AssessmentForm
     
 
 class AssessmentDeleteView(DeleteView):
     model = Assessment
-    template_name = 'setup/assessment_confirm_delete.html'
+    template_name = 'setup/assessment/assessment_confirm_delete.html'
     success_url = '/assessments/'
     context_object_name = 'assessment'
 
 # -----------------------Invoice Views---------------------------------------
 
 class InvoiceListView(ListView):
-    model = Assessment
+    model = Invoice
     form_class = InvoiceForm
-    template_name = 'setup/invoice_list.html'
+    template_name = 'setup/invoice/invoice_list.html'
     context_object_name = 'invoices'
-
-    def get_queryset(self):
-        try:
-            search = self.request.GET.get('search',)
-        except KeyError:
-            search = None
-        if search:
-            invoices = Assessment.objects.filter(invoice_number=search)
-        else:
-            invoices = Assessment.objects.all()
-        return invoices
 
 
 class InvoiceDetailView(DetailView):
-    model = Assessment
-    template_name = 'setup/invoice_detail.html'    
+    model = Invoice
+    template_name = 'setup/invoice/invoice_detail.html'    
     context_object_name = 'invoice'
 
 
 def increment_invoice_number():
-    assessment = Assessment.objects.all().order_by('-id')
-    last_invoice = assessment[1]    
-    if not last_invoice:
-         return 'EHS-1'
-    invoice_no = last_invoice.invoice_number
-    invoice_int = int(invoice_no.split('EHS-')[-1])
+    last_invoice = Invoice.objects.all().order_by('id').last()     
+    if not last_invoice:        
+        return 'EHS1'
+    invoice_no = last_invoice.number
+    invoice_int = int(invoice_no.split('EHS')[-1])
     new_invoice_int = invoice_int + 1
-    new_invoice_no = 'EHS-' + str(new_invoice_int)
+    new_invoice_no = 'EHS' + str(new_invoice_int)
     return new_invoice_no
 
-class InvoiceCreateView(UpdateView):
-    model = Assessment
-    template_name = 'setup/invoice_form.html'
-    form_class = InvoiceForm
-    initial = {"invoice_number": increment_invoice_number,
-               "invoice_date": date.today()
-               }
-    
-    def get_context_data(self, *args, **kwargs):
-        context = super(InvoiceCreateView, self).get_context_data(**kwargs) 
-        source_pk = self.kwargs['source_pk']
-        report_pk = self.kwargs['report_pk']               
-        context['hold'] = Rate.objects.get(source=source_pk, report_type=report_pk)
-        return context    
+
+def InvoiceCreate(request):
+    if request.method == 'POST':        
+        form = InvoiceForm(request.POST)        
+        if form.is_valid():
+   	        form.save()
+        return redirect('invoices-list')            
+    else:
+        reporttype_id = request.GET.get('reporttype_id')
+        assessment_id = request.GET.get('assessment_id')        
+        source_id = request.GET.get('source_id')
+        rate = Rate.objects.get(source=source_id, report_type=reporttype_id)
+
+        amount = rate.amount
+        tax = round(amount * Decimal(0.13),2)
+        total = amount + tax        
+        today = date.today()
+        number = increment_invoice_number()        
+        form = InvoiceForm(initial={
+            'date': today,
+            'number': number,
+            'subtotal': amount,
+            'report_type': reporttype_id,
+            'assessment': assessment_id,
+            'tax': tax,
+            'total': total
+        })
+    return render(request,'setup/invoice/invoice_form.html',{'form':form})
             
 
 class InvoiceUpdateView(UpdateView):
-    model = Assessment
-    template_name = 'setup/invoice_form.html'
+    model = Invoice
+    template_name = 'setup/invoice/invoice_form.html'
     form_class = InvoiceForm
+
+class InvoiceDeleteView(DeleteView):
+    model = Invoice
+    template_name = 'setup/invoice/assessment_confirm_delete.html'
+    success_url = '/invoices/'
+    context_object_name = 'invoice'
 
 # -----------------------Rate Views---------------------------------------
     
@@ -335,40 +344,40 @@ class RateDeleteView(DeleteView):
     success_url = '/rates/'
     
 
-# -----------------------Payment Views---------------------------------------
+# -----------------------Source Payment Views---------------------------------------
     
 
-class PaymentListView(ListView):
-    model = Payment
-    form_class = PaymentForm    
-    template_name = 'setup/payment_list.html'
-    context_object_name = 'payment'
+class SourcePaymentListView(ListView):
+    model = SourcePayment
+    form_class = SourcePaymentForm    
+    template_name = 'setup/sourcepayment/sourcepayment_list.html'
+    context_object_name = 'sourcepayment'
 
 
-class PaymentDetailView(DetailView):
-    model = Payment
-    template_name = 'setup/payment_detail.html'
-    context_object_name = 'payment'
+class SourcePaymentDetailView(DetailView):
+    model = SourcePayment
+    template_name = 'setup/sourcepayment/sourcepayment_detail.html'
+    context_object_name = 'sourcepayment'
 
 
-class PaymentCreateView(CreateView):
-    model = Payment
-    template_name = 'setup/payment_form.html'
-    form_class = PaymentForm
+class SourcePaymentCreateView(CreateView):
+    model = SourcePayment
+    template_name = 'setup/sourcepayment/sourcepayment_form.html'
+    form_class = SourcePaymentForm
     #initial = {"email": "Ijaz email"}
     
 
-class PaymentUpdateView(UpdateView):
-    model = Payment
-    template_name = 'setup/payment_form.html'
-    form_class = PaymentForm
+class SourcePaymentUpdateView(UpdateView):
+    model = SourcePayment
+    template_name = 'setup/sourcepayment/sourcepayment_form.html'
+    form_class = SourcePaymentForm
     
 
-class PaymentDeleteView(DeleteView):
-    model = Payment
-    template_name = 'setup/payment_confirm_delete.html'
-    context_object_name = 'payment'
-    success_url = '/payments/'
+class SourcePaymentDeleteView(DeleteView):
+    model = SourcePayment
+    template_name = 'setup/sourcepayment/sourcepayment_confirm_delete.html'
+    context_object_name = 'sourcepayment'
+    success_url = '/sourcepayments/'
     
 
 # -----------------------ApplyPayment Views---------------------------------------
@@ -478,10 +487,6 @@ def InvoicePaidSwitch(invoice_id):
     invoice.save()    
     return  
     
-def InvoiceBalance(invoice_id, applypayment_id):
-    pass
-    return
-
 
 def ProcessPayment(request, pk):
     sourcepayment = Payment.objects.get(id=pk)
@@ -521,7 +526,7 @@ def ProcessPayment(request, pk):
             messages.info(request, 'Applied')
             applypayment = ApplyPayment(assessment=assessment, payment=sourcepayment, amount=amount)
             applypayment.save()
-            InvoicePaidSwitch(invoice_id)
+            # InvoicePaidSwitch(invoice_id)
             return redirect('process', pk)
 
     context = {

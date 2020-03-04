@@ -3,7 +3,7 @@
 {% block content %}
 
 <h3>Source Company Payment List</h3>
-<a class="btn btn-outline-primary btn-sm" href="{% url 'payments-new' %}">+Add</a>
+<a class="btn btn-outline-primary btn-sm" href="{% url 'sourcepayments-new' %}">+Add</a>
 <p></p>
 
 <table class="table table-sm table-striped">
@@ -18,14 +18,14 @@
         </tr>
     </thead>
     <tbody>
-        {% for item in payment %}
+        {% for item in sourcepayment %}
         <tr>
             <td>{{ item.source.name }}</td>
             <td>${{ item.amount }}</td>
             <td>{{ item.check_number }}</td>
             <td>{{ item.date }}</td>
             <td><a class="material-icons" href="{% url 'process' item.pk %}">add</a></td> 
-            <td><a class="material-icons" href="{% url 'payments-detail' item.pk %}">edit</a></td>            
+            <td><a class="material-icons" href="{% url 'sourcepayments-detail' item.pk %}">edit</a></td>            
         </tr>
         {% endfor %}
 

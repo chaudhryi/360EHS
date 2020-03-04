@@ -5,9 +5,9 @@
 <div class="container">
     <div class="card">
         <div class="card-header">            
-            <strong>360 EHS Invoice #:</strong> {{ invoice.invoice_number }}
+            <strong>360 EHS Invoice #:</strong> {{ invoice.number }}
             <span class="float-right"> <strong>Status:</strong>
-                {% if invoice.invoice_paid == True %}
+                {% if invoice.paid == True %}
                     <font color="green">PAID</font></span>                
                 {% else %}
                 <font color="red">OUTSTANDING</font></span>
@@ -30,19 +30,19 @@
                 <div class="col-sm-6">
                     <h6 class="mb-3">To:</h6>
                     <div>
-                        <strong>{{ invoice.source.name }}</strong>
+                        <strong>{{ invoice.assessment.claimant.source.name }}</strong>
                     </div>
-                    <div>Attn: {{ invoice.source.billing_contact }}</div>
-                    <div>{{ invoice.source.address }}</div>
-                    <div>email: {{ invoice.source.billing_email }}</div>
-                    <div>Phone: {{ invoice.source.billing_phone }}</div>
+                    <div>Attn: {{ invoice.assessment.claimant.source.billing_contact }}</div>
+                    <div>{{ invoice.assessment.claimant.source.address }}</div>
+                    <div>email: {{ invoice.assessment.claimant.source.billing_email }}</div>
+                    <div>Phone: {{ invoice.assessment.claimant.source.billing_phone }}</div>
                 </div>
             </div>
             <div class="row mb-4">
                 <div class="col-sm-6">
-                    <div><strong>Physician: </strong>Dr. {{ invoice.doctor }}</div>
-                    <div><strong>Claimant: </strong>{{ invoice.claimant_name }}</div>
-                    <div><strong>Claim Number: </strong>{{ invoice.claim_number }}</div>
+                    <div><strong>Physician: </strong>Dr. {{ invoice.assessment.doctor }}</div>
+                    <div><strong>Claimant: </strong>{{ invoice.assessment.claimant.full_name }}</div>
+                    <div><strong>Claim Number: </strong>{{ invoice.number }}</div>
                     
                 </div>                
             </div>
@@ -62,13 +62,13 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="center">{{ invoice.invoice_date }}</td>
+                            <td class="center">{{ invoice.date }}</td>
                             <td class="left strong">{{ invoice.report_type.abbreviation }}</td>
                             <td class="left">{{ invoice.report_type.description }}</td>
 
-                            <td class="right">${{ invoice.invoice_subtotal }}</td>
+                            <td class="right">${{ invoice.subtotal }}</td>
                             <td class="center">1</td>
-                            <td class="right">${{ invoice.invoice_subtotal }}</td>
+                            <td class="right">${{ invoice.subtotal }}</td>
                         </tr>
                         
                     </tbody>
@@ -86,20 +86,20 @@
                                 <td class="left">
                                     <strong>Subtotal</strong>
                                 </td>
-                                <td class="right">${{ invoice.invoice_subtotal }}</td>
+                                <td class="right">${{ invoice.subtotal }}</td>
                             </tr>                            
                             <tr>
                                 <td class="left">
                                     <strong>HST (13%)</strong>
                                 </td>
-                                <td class="right">${{ invoice.invoice_tax }}</td>
+                                <td class="right">${{ invoice.tax }}</td>
                             </tr>
                             <tr>
                                 <td class="left">
                                     <strong>Total</strong>
                                 </td>
                                 <td class="right">
-                                    <strong>${{ invoice.invoice_total }}</strong>
+                                    <strong>${{ invoice.total }}</strong>
                                 </td>
                             </tr>
                         </tbody>

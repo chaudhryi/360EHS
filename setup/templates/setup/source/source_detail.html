@@ -3,7 +3,7 @@
 {% block content %}
 
 {% if source.image %}
-    <img src="{{ source.image.url }}" width=300px height=65px alt="{{ source.name }}">
+    <img src="{{ source.image.url }}" width=300px height=65px alt="{{ source.name }}" >
 {% endif %}
 <hr>
 <a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'sources-delete' source.id %}">Delete</a>
