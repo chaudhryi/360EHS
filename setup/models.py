@@ -158,9 +158,14 @@ class Invoice(models.Model):
     date = models.DateField(null=True, blank=True)
     subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)    
+    total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    applied = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True, default=0)    
     balance = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):        
+        self.balance = self.total - self.applied
+        super().save(*args, **kwargs)
         
     def __str__(self):
         return self.assessment.claimant.full_name + " " + self.number
@@ -185,8 +190,8 @@ class SourcePayment(models.Model):
 
 
 class ApplyPayment(models.Model):
-    assessment = models.ForeignKey(Assessment, on_delete = models.CASCADE)
-    payment = models.ForeignKey(SourcePayment, on_delete = models.CASCADE)
+    invoice = models.ForeignKey(Invoice, on_delete = models.CASCADE)
+    sourcepayment = models.ForeignKey(SourcePayment, on_delete = models.CASCADE)
     date = models.DateField(null=True, blank=True)
     amount = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
@@ -195,7 +200,7 @@ class ApplyPayment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.assessment.claimant.full_name + " " + self.payment.check_number
+        return self.invoice + " " + self.sourcepayment.reference_number
     
     def get_absolute_url(self):
         return reverse('applypayments-detail', kwargs={'pk': self.pk})

@@ -36,7 +36,7 @@
     <tbody>
         {% for item in invoices %}
         <tr>
-            <td><a href="{% url 'invoices-detail' item.pk %}">{{ item.number }}</a></td>
+            <td><a href="{% url 'invoices-update' item.pk %}">{{ item.number }}</a></td>
             <td>{{ item.assessment.claimant.full_name }}</td>
             <td>{{ item.assessment.claimant.source }}</td>
             <td>{{ item.date }}</td>

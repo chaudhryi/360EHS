@@ -22,7 +22,7 @@
         <tr>
             <td>{{ item.source.name }}</td>
             <td>${{ item.amount }}</td>
-            <td>{{ item.check_number }}</td>
+            <td>{{ item.reference_number }}</td>
             <td>{{ item.date }}</td>
             <td><a class="material-icons" href="{% url 'process' item.pk %}">add</a></td> 
             <td><a class="material-icons" href="{% url 'sourcepayments-detail' item.pk %}">edit</a></td>            

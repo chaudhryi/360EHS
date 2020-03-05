@@ -46,6 +46,7 @@
         <thead class="thead-dark">
             <tr>            
                 <th scope="col">Invoice#</th>
+                <th scope="col">Report</th>
                 <th scope="col">Date</th>
                 <th scope="col">Subtotal</th>
                 <th scope="col">HST</th>
@@ -56,6 +57,7 @@
             {% for invoice in invoices %}
             <tr>
                 <td>{{ invoice.number }}</td>
+                <td>{{ invoice.report_type.abbreviation }}</td>
                 <td>{{ invoice.date }}</td>
                 <td>{{ invoice.subtotal }}</td>
                 <td>{{ invoice.tax }}</td>

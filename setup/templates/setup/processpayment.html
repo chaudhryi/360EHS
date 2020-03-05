@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col">
             <h6>
-                <p>Source Company: {{ payment.source.name }} {{ payment.check_number }}</p>
+                <p>Source Company: {{ payment.source.name }} {{ payment.reference_number }}</p>
                 <p>Date of check: {{ payment.date }}</p>
                 <p>amount: ${{ payment.amount }}</p>
                 <p>Total Applied: ${{ total_applied }}</p>
@@ -21,7 +21,7 @@
             </h6>
         </div>
         <div class="col">
-            <img src="{{ payment.source.image.url }}" width=300px height=65px alt="{{ source.name }}" >
+            <img src="{{ payment.source.image.url }}" width=300px height=65px alt="{{ payment.source.name }}" >
         </div>
     </div>
 </div>
@@ -53,24 +53,24 @@
             <th scope="col">Assessment</th>
             <th scope="col">Invoice#</th>
             <th scope="col">Date</th>
-            <th scope="col">Subtotal</th>
-            <th scope="col">HST</th>
             <th scope="col">Total</th>
+            <th scope="col">Applied</th>
+            <th scope="col">Balance</th>
             <th scope="col">Amount</th>
         </tr>
     </thead>
     <tbody>
         {% for invoice in openinvoices %}
         <tr>
-            <td>{{ invoice.claimant }}</td>
-            <td>{{ invoice.invoice_number }}</td>
-            <td>{{ invoice.invoice_date }}</td>
-            <td>{{ invoice.invoice_subtotal }}</td>
-            <td>{{ invoice.invoice_tax }}</td>
-            <td>{{ invoice.invoice_total }}</td>
+            <td>{{ invoice.assessment.claimant }}</td>
+            <td>{{ invoice.number }}</td>
+            <td>{{ invoice.date }}</td>
+            <td>{{ invoice.total }}</td>
+            <td>{{ invoice.applied }}</td>
+            <td>{{ invoice.balance }}</td>
             <td>
-                <form method="POST" class="payment-form" novalidate>{% csrf_token %}
-                    <input type="text" size="5" name="amount" value="{{ invoice.invoice_total }}">
+                <form method="POST" action="{% url 'process' payment.id %}" novalidate>{% csrf_token %}
+                    <input type="text" size="5" name="amount" value="{{ invoice.balance }}">
                     <input type="hidden" name="invoice_id" value="{{ invoice.id }}">
                     <button class="btn btn-outline-primary btn-sm" type="submit">Apply</button>
                 </form>
@@ -98,13 +98,13 @@
     <tbody>
         {% for invoice in closedinvoices %}
         <tr>
-            <td>{{ invoice.claimant }}</td>
-            <td>{{ invoice.invoice_number }}</td>
-            <td>{{ invoice.invoice_date }}</td>
-            <td>{{ invoice.invoice_subtotal }}</td>
-            <td>{{ invoice.invoice_tax }}</td>
-            <td>{{ invoice.invoice_total }}</td>
-            <td>{{ invoice.invoice_balance }}</td>
+            <td>{{ invoice.assessment.claimant }}</td>
+            <td>{{ invoice.number }}</td>
+            <td>{{ invoice.date }}</td>
+            <td>{{ invoice.subtotal }}</td>
+            <td>{{ invoice.tax }}</td>
+            <td>{{ invoice.total }}</td>
+            <td>{{ invoice.balance }}</td>
         </tr>
         {% endfor %}
     </tbody>    

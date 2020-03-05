@@ -42,7 +42,7 @@
                 <div class="col-sm-6">
                     <div><strong>Physician: </strong>Dr. {{ invoice.assessment.doctor }}</div>
                     <div><strong>Claimant: </strong>{{ invoice.assessment.claimant.full_name }}</div>
-                    <div><strong>Claim Number: </strong>{{ invoice.number }}</div>
+                    <div><strong>Claim Number: </strong>{{ invoice.assessment.claimant.claim_number }}</div>
                     
                 </div>                
             </div>
