@@ -67,29 +67,5 @@
         </tbody>
     </table>
 
-
-    <table class="table table-sm table-striped">
-        <thead class="thead-dark">
-            <tr>            
-                <th scope="col">Payment</th>
-                <th scope="col">Date</th>
-                <th scope="col">amount</th>
-                <th scope="col">Check No.</th>    
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in payments %}       
-            <tr>            
-                <td>{{ item.assessment.claimant.source.name }}</td>
-                <td>{{ item.date }}</td>
-                <td>{{ item.amount }}</td> 
-                <td>{{ item.payment.check_number }}</td>                
-            </tr>            
-            {% endfor %}
-            
-        </tbody>
-    </table>
- 
-
 {% endblock content %}
 

@@ -179,8 +179,13 @@ class SourcePayment(models.Model):
     amount = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     date = models.DateField(null=True, blank=True)
     reference_number = models.CharField(max_length=20, null=True, blank=True)
-    applied_balance = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     applied = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        ratio = 0.13/1.13      
+        self.tax = round(float(self.amount) * ratio,2)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.source.name + " " + self.reference_number
@@ -200,7 +205,7 @@ class ApplyPayment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.invoice + " " + self.sourcepayment.reference_number
+        return str(self.invoice) + " " + str(self.sourcepayment.reference_number)
     
     def get_absolute_url(self):
         return reverse('applypayments-detail', kwargs={'pk': self.pk})

@@ -217,9 +217,7 @@ class AssessmentDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(AssessmentDetailView, self).get_context_data(*args, **kwargs)
-        #context['rates'] = self.object.rate_set.all().order_by('-amount')  **THis also does the same thing
         context['invoices'] = Invoice.objects.all().filter(assessment=self.object).order_by('-date')
-        context['payments'] = ApplyPayment.objects.filter(invoice=self.kwargs['pk'])
         context['reporttypes'] = ReportType.objects.all()        
         return context
 
@@ -492,7 +490,7 @@ def InvoicePaidSwitch(invoice_id):
 def ProcessPayment(request, pk):
     source_payment = SourcePayment.objects.get(id=pk)
     open_invoices = Invoice.objects.filter(assessment__claimant__source=source_payment.source, paid = False)
-    closed_invoices = Invoice.objects.filter(assessment__claimant__source=source_payment.source, paid = True)
+    # closed_invoices = Invoice.objects.filter(assessment__claimant__source=source_payment.source, paid = True)
     applied = ApplyPayment.objects.filter(sourcepayment=pk)
     
     if applied:
@@ -530,10 +528,24 @@ def ProcessPayment(request, pk):
 
     context = {
         'openinvoices': open_invoices,
-        'closedinvoices': closed_invoices,
+        'applied': applied,
+        # 'closedinvoices': closed_invoices,
         'payment': source_payment,
         'total_applied': total_applied,
         'balance': balance,        
     }       
     return render(request, 'setup/processpayment.html', context)
 
+def ReversePayment(request, item_id):
+        
+    payment_to_delete = ApplyPayment.objects.get(id=item_id)
+    invoice_id = payment_to_delete.invoice.id
+    pk = payment_to_delete.sourcepayment.id
+    amount = payment_to_delete.amount
+    payment_to_delete.delete()
+    invoice = Invoice.objects.get(id=invoice_id)
+    invoice.paid = False
+    invoice.applied = invoice.applied - amount
+    invoice.save()
+
+    return redirect('process', pk)

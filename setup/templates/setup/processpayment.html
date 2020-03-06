@@ -82,7 +82,7 @@
 
 <hr>
 
-<h5>Applied Invoices</h5>
+<h5>Applied Payments</h5>
 <table class="table table-sm table-striped">
     <thead class="thead-dark">
         <tr>
@@ -93,18 +93,20 @@
             <th scope="col">HST</th>
             <th scope="col">Total</th>
             <th scope="col">Balance</th>
+            <th scope="col">Reverse</th>
         </tr>
     </thead>
     <tbody>
-        {% for invoice in closedinvoices %}
+        {% for item in applied %}
         <tr>
-            <td>{{ invoice.assessment.claimant }}</td>
-            <td>{{ invoice.number }}</td>
-            <td>{{ invoice.date }}</td>
-            <td>{{ invoice.subtotal }}</td>
-            <td>{{ invoice.tax }}</td>
-            <td>{{ invoice.total }}</td>
-            <td>{{ invoice.balance }}</td>
+            <td>{{ item.invoice.assessment.claimant }}</td>
+            <td>{{ item.invoice.number }}</td>
+            <td>{{ item.invoice.date }}</td>
+            <td>{{ item.invoice.subtotal }}</td>
+            <td>{{ item.invoice.tax }}</td>
+            <td>{{ item.invoice.total }}</td>
+            <td>{{ item.invoice.balance }}</td>
+            <td><a class="material-icons" href="{% url 'reversepayment' item.id %}">replay</a></td> 
         </tr>
         {% endfor %}
     </tbody>    
