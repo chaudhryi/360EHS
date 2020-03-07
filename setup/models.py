@@ -168,7 +168,7 @@ class Invoice(models.Model):
         super().save(*args, **kwargs)
         
     def __str__(self):
-        return self.assessment.claimant.full_name + " " + self.number
+        return str(self.assessment.claimant.full_name) + " " + str(self.number)
     
     def get_absolute_url(self):
         return reverse('invoices-detail', kwargs={'pk': self.pk})
@@ -212,30 +212,30 @@ class ApplyPayment(models.Model):
 
 
 class DoctorBill(models.Model):
-    assessment = models.OneToOneField(Assessment, on_delete = models.CASCADE)
+    invoice = models.OneToOneField(Invoice, on_delete = models.CASCADE)
     bill_date = models.DateField(null=True, blank=True)
-    bill_subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    bill_tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    bill_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    bill_paid = models.BooleanField(default=False)
-    date_paid = models.DateField(null=True, blank=True)
+    subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True, default = 0)
+    tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    paid = models.BooleanField(default=False)
+    paid_date = models.DateField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        self.bill_tax = self.bill_subtotal * Decimal(0.13)
-        self.bill_total = self.bill_subtotal * Decimal(1.13)
+        self.tax = self.subtotal * Decimal(0.13)
+        self.total = self.subtotal * Decimal(1.13)
         self.bill_date = date.today()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.assessment
+        return self.invoice
 
 
 class AgentBill(models.Model):
     assessment = models.OneToOneField(Assessment, on_delete = models.CASCADE)
     bill_date = models.DateField(null=True, blank=True)    
-    bill_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    bill_paid = models.BooleanField(default=False)
-    date_paid = models.DateField(null=True, blank=True)
+    total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    paid = models.BooleanField(default=False)
+    paid_date = models.DateField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.bill_date = date.today()
@@ -248,9 +248,9 @@ class AgentBill(models.Model):
 class ClinicBill(models.Model):
     assessment = models.OneToOneField(Assessment, on_delete = models.CASCADE)
     bill_date = models.DateField(null=True, blank=True)
-    bill_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    bill_paid = models.BooleanField(default=False)
-    date_paid = models.DateField(null=True, blank=True)
+    total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    paid = models.BooleanField(default=False)
+    paid_date = models.DateField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.bill_date = date.today()

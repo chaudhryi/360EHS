@@ -17,7 +17,6 @@
                 <p>amount: ${{ payment.amount }}</p>
                 <p>Total Applied: ${{ total_applied }}</p>
                 <p>Balance Remaining: <span style="background-color: #FFFF00">{{ balance }}</span></p>
-
             </h6>
         </div>
         <div class="col">
@@ -89,9 +88,7 @@
             <th scope="col">Assessment</th>
             <th scope="col">Invoice#</th>
             <th scope="col">Date</th>
-            <th scope="col">Subtotal</th>
-            <th scope="col">HST</th>
-            <th scope="col">Total</th>
+            <th scope="col">Applied</th>            
             <th scope="col">Balance</th>
             <th scope="col">Reverse</th>
         </tr>
@@ -102,9 +99,7 @@
             <td>{{ item.invoice.assessment.claimant }}</td>
             <td>{{ item.invoice.number }}</td>
             <td>{{ item.invoice.date }}</td>
-            <td>{{ item.invoice.subtotal }}</td>
-            <td>{{ item.invoice.tax }}</td>
-            <td>{{ item.invoice.total }}</td>
+            <td>{{ item.amount }}</td>            
             <td>{{ item.invoice.balance }}</td>
             <td><a class="material-icons" href="{% url 'reversepayment' item.id %}">replay</a></td> 
         </tr>

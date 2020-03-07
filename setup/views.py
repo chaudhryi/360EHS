@@ -415,23 +415,23 @@ class ApplyPaymentDeleteView(DeleteView):
     success_url = '/applypayments/'
 
 
-def CreateDoctorInvoice(assessment_id):
-    assessment = Assessment.objects.get(id=assessment_id)
-    abr = assessment.report_type.abbreviation
+def CreateDoctorInvoice(invoice_id):
+    invoice = Invoice.objects.get(id=invoice_id)
+    abr = invoice.report_type.abbreviation
     if abr == 'IME':
-        bill = assessment.doctor.rate_ime
+        bill = invoice.assessment.doctor.rate_ime
     elif abr == 'AD':
-        bill = assessment.doctor.rate_ad
+        bill = invoice.assessment.doctor.rate_ad
     elif abr == 'PR':
-        bill = assessment.doctor.rate_pr
+        bill = invoice.assessment.doctor.rate_pr
     elif abr == 'NS':
-        bill = assessment.doctor.rate_ns
+        bill = invoice.assessment.doctor.rate_ns
     elif abr == 'EX':
-        bill = assessment.doctor.rate_ex
+        bill = invoice.assessment.doctor.rate_ex
     elif abr == 'AR':
-        bill = assessment.doctor.rate_ar
+        bill = invoice.assessment.doctor.rate_ar
 
-    doctorbill = DoctorBill(assessment=assessment, bill_subtotal=bill)
+    doctorbill = DoctorBill(invoice=invoice, subtotal=bill)
     doctorbill.save()
     return
 
@@ -473,24 +473,30 @@ def CreateClinicInvoice(assessment_id):
 def InvoicePaidSwitch(invoice_id):
     invoice = Invoice.objects.get(id=invoice_id)
     invoice_total = invoice.total    
-    applied_invoices = ApplyPayment.objects.filter(invoice=invoice_id)    
-    applied_total = applied_invoices.aggregate(Sum('amount'))["amount__sum"]
-       
-    if invoice_total == applied_total:
-        invoice.paid = True
-        # CreateDoctorInvoice(invoice_id)
-        # CreateAgentInvoice(invoice_id)
-        # CreateClinicInvoice(invoice_id)
+    applied_invoices = ApplyPayment.objects.filter(invoice=invoice_id)
+    if applied_invoices:            
+        applied_total = applied_invoices.aggregate(Sum('amount'))["amount__sum"]
     else:
+        applied_total = 0
+       
+    if applied_total == invoice_total:
+        invoice.paid = True
+        CreateDoctorInvoice(invoice_id)
+        
+    if applied_total < invoice_total:
         invoice.paid = False
+        bill = DoctorBill.objects.filter(invoice=invoice_id)
+        
+        if bill:
+            bill.delete()
+        
     invoice.save()    
     return  
     
 
 def ProcessPayment(request, pk):
     source_payment = SourcePayment.objects.get(id=pk)
-    open_invoices = Invoice.objects.filter(assessment__claimant__source=source_payment.source, paid = False)
-    # closed_invoices = Invoice.objects.filter(assessment__claimant__source=source_payment.source, paid = True)
+    open_invoices = Invoice.objects.filter(assessment__claimant__source=source_payment.source, paid = False)    
     applied = ApplyPayment.objects.filter(sourcepayment=pk)
     
     if applied:
@@ -528,8 +534,7 @@ def ProcessPayment(request, pk):
 
     context = {
         'openinvoices': open_invoices,
-        'applied': applied,
-        # 'closedinvoices': closed_invoices,
+        'applied': applied,        
         'payment': source_payment,
         'total_applied': total_applied,
         'balance': balance,        
@@ -544,8 +549,8 @@ def ReversePayment(request, item_id):
     amount = payment_to_delete.amount
     payment_to_delete.delete()
     invoice = Invoice.objects.get(id=invoice_id)
-    invoice.paid = False
     invoice.applied = invoice.applied - amount
     invoice.save()
+    InvoicePaidSwitch(invoice_id)
 
     return redirect('process', pk)
