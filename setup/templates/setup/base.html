@@ -34,10 +34,19 @@
                     <a class="nav-link" href="{% url 'admin:index' %}">Admin <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Stats</a>
+                    <a class="nav-link" href="#">Ledger</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Billing</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Billing
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'paydoctors' %}">Pay Doctors</a>
+                        <a class="dropdown-item" href="{% url 'doctors-list' %}">Pay Agents</a>
+                        <a class="dropdown-item" href="{% url 'clinics-list' %}">Pay Clinics</a>
+                        <a class="dropdown-item" href="{% url 'expenses-list' %}">Expenses</a>                        
+                    </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"

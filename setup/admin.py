@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Agent, Doctor, Source, Clinic, Assessment, ReportType, Rate, SourcePayment, ApplyPayment, Claimant, Invoice
+from .models import Agent, Doctor, Source, Clinic, Assessment, ReportType, Rate, SourcePayment, ApplyPayment, Claimant, Invoice, Expense
 
 admin.site.register(Agent)
 admin.site.register(Doctor)
@@ -9,6 +9,7 @@ admin.site.register(SourcePayment)
 admin.site.register(ApplyPayment)
 admin.site.register(Claimant)
 admin.site.register(Invoice)
+admin.site.register(Expense)
 
 
 class AssessmentAdmin(admin.ModelAdmin):

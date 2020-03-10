@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Assessment, Doctor, Clinic, Agent, Source, Rate, SourcePayment, ApplyPayment, DoctorBill, AgentBill, ClinicBill, Claimant, Invoice, ReportType
-from .forms import AgentForm, DoctorForm, ClinicForm, SourceForm, AssessmentForm, InvoiceForm, RateForm, SourcePaymentForm, ApplyPaymentForm, ClaimantForm
+from .models import Assessment, Doctor, Clinic, Agent, Source, Rate, SourcePayment, ApplyPayment, DoctorBill, AgentBill, ClinicBill, Claimant, Invoice, ReportType, Expense
+from .forms import AgentForm, DoctorForm, ClinicForm, SourceForm, AssessmentForm, InvoiceForm, RateForm, SourcePaymentForm, ApplyPaymentForm, ClaimantForm, ExpenseForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from datetime import date
 from django.contrib import messages
@@ -385,7 +385,7 @@ class SourcePaymentDeleteView(DeleteView):
 class ApplyPaymentListView(ListView):
     model = ApplyPayment
     form_class = ApplyPaymentForm    
-    template_name = 'setup/applypayment_list.html'
+    template_name = 'setup/applypayment/applypayment_list.html'
     context_object_name = 'applypayment'
 
 
@@ -414,6 +414,8 @@ class ApplyPaymentDeleteView(DeleteView):
     context_object_name = 'applypayment'
     success_url = '/applypayments/'
 
+
+# -----------------------Create Invoice Views---------------------------------------
 
 def CreateDoctorInvoice(invoice_id):
     invoice = Invoice.objects.get(id=invoice_id)
@@ -493,6 +495,7 @@ def InvoicePaidSwitch(invoice_id):
     invoice.save()    
     return  
     
+# -----------------------Process Source Payments Views---------------------------------------
 
 def ProcessPayment(request, pk):
     source_payment = SourcePayment.objects.get(id=pk)
@@ -541,6 +544,7 @@ def ProcessPayment(request, pk):
     }       
     return render(request, 'setup/processpayment.html', context)
 
+
 def ReversePayment(request, item_id):
         
     payment_to_delete = ApplyPayment.objects.get(id=item_id)
@@ -554,3 +558,76 @@ def ReversePayment(request, item_id):
     InvoicePaidSwitch(invoice_id)
 
     return redirect('process', pk)
+
+# -----------------------Pay Doctors / Agents / Clinics Views---------------------------------------
+
+def PayDoctors(request):
+    doctors = Doctor.objects.all()
+    context = {'doctors': doctors}  
+
+    # if request.method == 'POST':
+
+    #     return render(request, 'setup/paydoctors.html', context)
+
+    if request.method == 'POST':
+        if 'doctor_id' in request.POST:
+            doctor_id = request.POST.get('doctor_id')
+            physician = Doctor.objects.get(id=doctor_id)
+            doctorbills = DoctorBill.objects.filter(invoice__assessment__doctor=doctor_id, paid=False)
+            total = doctorbills.aggregate(Sum('total'))["total__sum"]
+            subtotal = doctorbills.aggregate(Sum('subtotal'))["subtotal__sum"]
+            tax = doctorbills.aggregate(Sum('tax'))["tax__sum"]
+            count = doctorbills.count()
+
+            newcontext = {
+                'doctorbills': doctorbills,
+                'date': date.today(),
+                'total': total,
+                'subtotal': subtotal,
+                'tax': tax,
+                'count': count,
+                'physician': physician,
+            }
+            context.update(newcontext)
+
+    return render(request, 'setup/paydoctors.html', context)
+
+# -----------------------Expense Views---------------------------------------
+
+class ExpenseListView(ListView):
+    model = Expense
+    form_class = ExpenseForm
+    template_name = 'setup/expense/expense_list.html'
+    context_object_name = 'expenses'
+
+
+class ExpenseDetailView(DetailView):
+    model = Expense
+    template_name = 'setup/expense/expense_detail.html'
+    context_object_name = 'expense'
+
+
+class ExpenseCreateView(CreateView):
+    model = Expense
+    template_name = 'setup/expense/expense_form.html'
+    form_class = ExpenseForm  
+
+
+class ExpenseUpdateView(UpdateView):
+    model = Expense
+    template_name = 'setup/expense/expense_form.html'
+    form_class = ExpenseForm
+
+class ExpenseDeleteView(DeleteView):
+    model = Expense
+    template_name = 'setup/expense/expense_confirm_delete.html'
+    context_object_name = 'expense'
+    success_url = '/expenses/'
+
+
+
+
+
+
+
+

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Agent, Doctor, Clinic, Source, Assessment, Rate, SourcePayment, ApplyPayment, Claimant, Invoice
+from .models import Agent, Doctor, Clinic, Source, Assessment, Rate, SourcePayment, ApplyPayment, Claimant, Invoice, Expense
 
 
 class DateInput(forms.DateInput):
@@ -65,21 +65,15 @@ class SourcePaymentForm(forms.ModelForm):
         widgets = {'date': DateInput()}
 
 
-# class ApplyPaymentForm(forms.ModelForm):
-#     class Meta:
-#         model = ApplyPayment
-#         fields = '__all__'
-#         widgets = {'Date': DateInput()}
-        
-#     def __init__(self, *args, **kwargs): 
-#         super(ApplyPaymentForm, self).__init__(*args, **kwargs)                       
-#         self.fields['Date'].disabled = True
-#         self.fields['assessment'].disabled = True
-#         self.fields['payment'].disabled = True
-
 class ApplyPaymentForm(forms.ModelForm):
     class Meta:
         model = ApplyPayment
         fields = ['amount']        
         widgets = {'amount': forms.TextInput(attrs={'size': 5})}
-    
+
+
+class ExpenseForm(forms.ModelForm):
+    class Meta:
+        model = Expense
+        fields = '__all__'
+        widgets = {'date': DateInput()}

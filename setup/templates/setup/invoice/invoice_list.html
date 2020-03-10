@@ -30,13 +30,14 @@
             <th scope="col">HST</th>
             <th scope="col">Total</th>
             <th scope="col">Status</th>
-            <th scope="col">View</th>              
+            <th scope="col">View</th>
+            <th scope="col">Edit</th>              
         </tr>
     </thead>
     <tbody>
         {% for item in invoices %}
         <tr>
-            <td><a href="{% url 'invoices-update' item.pk %}">{{ item.number }}</a></td>
+            <td>{{ item.number }}</a></td>
             <td>{{ item.assessment.claimant.full_name }}</td>
             <td>{{ item.assessment.claimant.source }}</td>
             <td>{{ item.date }}</td>
@@ -49,6 +50,8 @@
                 <font color="red">OUTSTANDING</font></span>
                 {% endif %} </td>
             <td><a class="material-icons" href="{% url 'invoices-detail' item.pk %}">description</a></td>
+            <td><a class="material-icons" href="{% url 'invoices-update' item.pk %}">edit</a></td> 
+            
         </tr>
         {% endfor %}
     </tbody>

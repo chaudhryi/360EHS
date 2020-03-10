@@ -1,0 +1,33 @@
+{% extends 'setup/base.html' %}
+
+{% block content %}
+
+<h3>List of Expenses</h3>
+<a class="btn btn-outline-primary btn-sm" href="{% url 'expenses-new' %}">+Add</a>
+<p></p>
+
+<table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Reference</th>
+            <th scope="col">Date</th>
+            <th scope="col">Total</th>
+            <th scope="col">Payee</th>
+            <th scope="col">Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in expenses %}
+        <tr>
+            <td><a href="{% url 'expenses-detail' item.pk %}">{{ item.reference }}</a></td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.total }}</td>
+            <td>{{ item.payee }}</td>
+            <td>{{ item.note }}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}

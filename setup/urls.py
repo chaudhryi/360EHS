@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AgentListView, AgentDetailView, AgentCreateView, AgentUpdateView, AgentDeleteView, DoctorListView, DoctorDetailView, DoctorCreateView, DoctorUpdateView, DoctorDeleteView, ClinicListView, ClinicCreateView, ClinicDetailView, ClinicUpdateView, ClinicDeleteView, SourceListView, SourceCreateView, SourceDetailView, SourceUpdateView, SourceDeleteView, AssessmentListView, AssessmentCreateView, AssessmentDetailView, AssessmentUpdateView, AssessmentDeleteView, InvoiceListView, InvoiceCreate, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView, RateListView, RateDetailView, RateCreateView,RateUpdateView, RateDeleteView, SourcePaymentListView, SourcePaymentDetailView, SourcePaymentCreateView, SourcePaymentUpdateView, SourcePaymentDeleteView, ApplyPaymentListView, ApplyPaymentDetailView, ApplyPaymentCreateView, ApplyPaymentUpdateView, ApplyPaymentDeleteView, ProcessPayment, ClaimantListView, ClaimantDetailView, ClaimantCreateView, ClaimantUpdateView, ClaimantDeleteView, ReversePayment
+from .views import AgentListView, AgentDetailView, AgentCreateView, AgentUpdateView, AgentDeleteView, DoctorListView, DoctorDetailView, DoctorCreateView, DoctorUpdateView, DoctorDeleteView, ClinicListView, ClinicCreateView, ClinicDetailView, ClinicUpdateView, ClinicDeleteView, SourceListView, SourceCreateView, SourceDetailView, SourceUpdateView, SourceDeleteView, AssessmentListView, AssessmentCreateView, AssessmentDetailView, AssessmentUpdateView, AssessmentDeleteView, InvoiceListView, InvoiceCreate, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView, RateListView, RateDetailView, RateCreateView,RateUpdateView, RateDeleteView, SourcePaymentListView, SourcePaymentDetailView, SourcePaymentCreateView, SourcePaymentUpdateView, SourcePaymentDeleteView, ApplyPaymentListView, ApplyPaymentDetailView, ApplyPaymentCreateView, ApplyPaymentUpdateView, ApplyPaymentDeleteView, ProcessPayment, ClaimantListView, ClaimantDetailView, ClaimantCreateView, ClaimantUpdateView, ClaimantDeleteView, ReversePayment, PayDoctors, ExpenseListView, ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, ExpenseDeleteView
 from . import views
 
 
@@ -51,8 +51,7 @@ urlpatterns = [
     path('assessments/<int:pk>/delete/', AssessmentDeleteView.as_view(), name='assessments-delete'),
 
 #---------------Invoice URLs-----------------------------------------
-    path('invoices/', InvoiceListView.as_view(), name='invoices-list'),
-    # path('invoices/new/', InvoiceCreateView.as_view(), name='invoices-new'),
+    path('invoices/', InvoiceListView.as_view(), name='invoices-list'),    
     path('invoices/new/', views.InvoiceCreate, name='invoices-new'),
     path('invoices/<int:pk>/', InvoiceDetailView.as_view(), name='invoices-detail'),       
     path('invoices/<int:pk>/update/', InvoiceUpdateView.as_view(), name='invoices-update'),
@@ -79,7 +78,15 @@ urlpatterns = [
     path('applypayments/<int:pk>/update/', ApplyPaymentUpdateView.as_view(), name='applypayments-update'),
     path('applypayments/<int:pk>/delete/', ApplyPaymentDeleteView.as_view(), name='applypayments-delete'),
 
+#---------------Expenses URLs-------------------------------------------  
+    path('expenses/', ExpenseListView.as_view(), name='expenses-list'),
+    path('expenses/new/', ExpenseCreateView.as_view(), name='expenses-new'),
+    path('expenses/<int:pk>/', ExpenseDetailView.as_view(), name='expenses-detail'),
+    path('expenses/<int:pk>/update/', ExpenseUpdateView.as_view(), name='expenses-update'),
+    path('expenses/<int:pk>/delete/', ExpenseDeleteView.as_view(), name='expenses-delete'),
+
     path('process/<int:pk>/', views.ProcessPayment, name='process'),
     path('reversepayment/<int:item_id>/', views.ReversePayment, name='reversepayment'),
+    path('paydoctors/', views.PayDoctors, name='paydoctors'),
 
 ]

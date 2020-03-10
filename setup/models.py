@@ -55,7 +55,7 @@ class Doctor(models.Model):
     rate_ar = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return self.first_name+" "+self.last_name
+        return self.first_name + " " + self.last_name
 
     def get_absolute_url(self):
         return reverse('doctors-detail', kwargs={'pk': self.pk})
@@ -168,7 +168,7 @@ class Invoice(models.Model):
         super().save(*args, **kwargs)
         
     def __str__(self):
-        return str(self.assessment.claimant.full_name) + " " + str(self.number)
+        return self.number
     
     def get_absolute_url(self):
         return reverse('invoices-detail', kwargs={'pk': self.pk})
@@ -181,6 +181,7 @@ class SourcePayment(models.Model):
     reference_number = models.CharField(max_length=20, null=True, blank=True)
     tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     applied = models.BooleanField(default=False)
+    abbreviation = models.CharField(max_length=2, default='CR')
 
     def save(self, *args, **kwargs):
         ratio = 0.13/1.13      
@@ -258,4 +259,29 @@ class ClinicBill(models.Model):
 
     def __str__(self):
         return self.assessment.clinic.name
+
+
+class Expense(models.Model):    
+    EXPENSE_TYPE = [
+        ('Physician payout', 'Physician payout'),
+        ('Agent payout', 'Agent payout'),
+        ('Clinic rent', 'Clinic rent'),
+        ('Other expense', 'Other expense'),
+        ('Consulting fees', 'Consulting fees'),
+    ]
+    reference = models.CharField(max_length=15, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    description = models.CharField(max_length=100, choices=EXPENSE_TYPE)
+    payee = models.CharField(max_length=100, null=True, blank=True)
+    subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    note = models.CharField(max_length=200, null=True, blank=True)
+    abbreviation = models.CharField(max_length=2, null=True, blank=True, default='DR')
+
+    def __str__(self):
+        return self.payee + ' ' + str(self.total)
+    
+    def get_absolute_url(self):
+        return reverse('expenses-detail', kwargs={'pk': self.pk})
     

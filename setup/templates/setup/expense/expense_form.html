@@ -1,0 +1,37 @@
+{% extends 'setup/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Add or Update an Expense</h2>
+<hr>
+<form method="POST" class="clinic-form" novalidate>{% csrf_token %}
+    <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+            {{ form.reference|as_crispy_field }}
+        </div>        
+        <div class="form-group col-md-6 mb-0">
+            {{ form.date|as_crispy_field }}
+        </div>
+    </div>
+    {{ form.description|as_crispy_field }}
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            {{ form.payee|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            {{ form.subtotal|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 mb-0">
+            {{ form.tax|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 mb-0">
+            {{ form.total|as_crispy_field }}
+        </div>        
+    </div>
+    {{ form.note|as_crispy_field }}
+    <hr>
+    
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+{% endblock content%}

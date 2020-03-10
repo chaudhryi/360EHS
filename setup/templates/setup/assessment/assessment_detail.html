@@ -51,6 +51,7 @@
                 <th scope="col">Subtotal</th>
                 <th scope="col">HST</th>
                 <th scope="col">Total</th>
+                <th scope="col">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -62,6 +63,11 @@
                 <td>{{ invoice.subtotal }}</td>
                 <td>{{ invoice.tax }}</td>
                 <td>{{ invoice.total }}</td>
+                <td>{% if invoice.paid == True %}
+                    <font color="green">PAID</font></span>
+                    {% else %}
+                    <font color="red">OUTSTANDING</font></span>
+                    {% endif %} </td>                
             </tr>
             {% endfor %}
         </tbody>
