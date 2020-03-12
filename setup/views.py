@@ -6,6 +6,8 @@ from datetime import date
 from django.contrib import messages
 from django.db.models import Sum
 from decimal import Decimal
+from operator import attrgetter
+from itertools import chain
 
 
 
@@ -618,11 +620,36 @@ class ExpenseUpdateView(UpdateView):
     template_name = 'setup/expense/expense_form.html'
     form_class = ExpenseForm
 
+
 class ExpenseDeleteView(DeleteView):
     model = Expense
     template_name = 'setup/expense/expense_confirm_delete.html'
     context_object_name = 'expense'
     success_url = '/expenses/'
+
+
+def Ledger(request):
+    debit = Expense.objects.only('date', 'total', 'abbreviation', 'description')
+    total_debit = debit.aggregate(Sum('total'))["total__sum"]
+    total_debit_tax = debit.aggregate(Sum('tax'))["tax__sum"]
+
+    credit = SourcePayment.objects.only('date', 'amount', 'abbreviation', 'source')
+    total_credit = credit.aggregate(Sum('amount'))["amount__sum"]
+    total_credit_tax = credit.aggregate(Sum('tax'))["tax__sum"]
+
+    combined = sorted(chain(debit, credit),key=attrgetter('date'), reverse=True)
+    balance = (total_credit-total_debit) + (total_credit_tax - total_debit_tax)
+
+    context = {
+        'combined': combined,
+        'total_debit': total_debit,
+        'total_credit': total_credit,
+        'total_debit_tax': total_debit_tax,
+        'total_credit_tax': total_credit_tax,
+        'balance': balance,
+    }
+    return render(request, 'setup/ledger.html', context)
+
 
 
 

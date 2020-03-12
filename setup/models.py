@@ -181,7 +181,7 @@ class SourcePayment(models.Model):
     reference_number = models.CharField(max_length=20, null=True, blank=True)
     tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     applied = models.BooleanField(default=False)
-    abbreviation = models.CharField(max_length=2, default='CR')
+    abbreviation = models.CharField(max_length=2, default='CR', blank=True, null=True)
 
     def save(self, *args, **kwargs):
         ratio = 0.13/1.13      

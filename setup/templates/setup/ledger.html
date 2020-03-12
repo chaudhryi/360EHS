@@ -1,0 +1,53 @@
+{% extends 'setup/base.html' %}
+
+
+{% block content %}
+
+<h1>360 EHS Ledger</h1>
+<table class="table table-sm table-dark">
+    <tr>
+        <td>Total Debit: {{total_debit}}</td>
+        <td>Total HST: {{total_debit_tax}}</td>
+        <td>Total Credit: {{total_credit}}</td>
+        <td>Total HST: {{total_credit_tax}}</td>
+        <td>BALANCE: {{balance}}</td>
+    </tr>
+</table>
+
+<table class="table table-sm table-striped">
+    <th>Date</th>
+    <th>Debit </th>
+    <th>HST</th>
+    <th>Credit </th>
+    <th>HST</th>
+    <th>Description </th>
+    <th>Note </th>
+    {% for item in combined %}
+    <tr>
+        <td>{{item.date}}</td>
+
+        {% if item.abbreviation == 'DR' %}
+            <td>{{item.total}}</td>
+            <td>{{item.tax}}</td>
+            <td></td>
+            <td></td>
+            <td>{{item.description}}</td>
+            <td>{{item.note}} - {{item.payee}}</td>
+        {% endif %}
+
+        {% if item.abbreviation == 'CR' %}
+            <td></td>
+            <td></td>
+            <td>{{item.amount}}</td>
+            <td>{{item.tax}}</td>
+            <td>{{item.source}}</td>
+            <td>#{{item.reference_number}}</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock content %}
+
+
