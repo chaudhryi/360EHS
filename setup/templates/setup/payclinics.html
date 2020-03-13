@@ -7,12 +7,12 @@
 {% block content %}
 
 
-<h5>Unpaid Physician Invoices that have been paid by the Source:</h5>
+<h5>Unpaid Clinic Invoices:</h5>
 
-<form method="POST" action="{% url 'paydoctors' %}" class="payment-form" novalidate>{% csrf_token %}
-    <select name="doctor_id">
-        {% for doctor in doctors %}
-            <option value="{{ doctor.id }}">Dr. {{ doctor }} </option>
+<form method="POST" action="{% url 'payclinics' %}" class="payment-form" novalidate>{% csrf_token %}
+    <select name="clinic_id">
+        {% for clinic in clinics %}
+            <option value="{{ clinic.id }}">{{ clinic }} </option>
         {% endfor %}
     </select>    
     <button class="btn btn-primary btn-sm mt=1 mb=3" type="submit">Find Unpaid Invoices</button>
@@ -20,7 +20,7 @@
 
 <hr>
 
-{% if doctorbills %}
+{% if clinicbills %}
 <div class="container">
     <div class="row">
         <div class="col">
@@ -36,11 +36,11 @@
                     </tr>
                     <tr>
                         <td>Physician:</td>
-                        <td align="right">Dr. {{ physician }}</td>
+                        <td align="right">{{ clinic }}</td>
                     </tr>
                     <tr>
                         <td>Date of Check:</td>
-                        <td align="right">{% now "f" %}</td>
+                        <td align="right">{% now "jS F Y H:i" %}</td>
                     </tr>
                 </table>
                 <p></p>
@@ -51,11 +51,11 @@
                     </tr>
                     <tr>
                         <td>Subtotal:</td>
-                        <td align="right">${{ subtotal }}</td>
+                        <td align="right">${{ total }}</td>
                     </tr>
                     <tr>
                         <td>Tax:</td>
-                        <td align="right">${{ tax }}</td>
+                        <td align="right">$0.00</td>
                     </tr>
                     <tr>
                         <td>Total:</td>
@@ -67,10 +67,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <form method="POST" action="{% url 'paydoctors' %}" class="payment-form">{% csrf_token %}
+                            <form method="POST" action="{% url 'payclinics' %}" class="payment-form">{% csrf_token %}
                                 <input type="text" size="14" name="reference" placeholder="360EHS check #" required>
-                                <input type="hidden" name="paydoctor_id" value="{{ physician.id }}">
-                                <button class="btn btn-danger btn-sm mt=1 mb=3" type="submit">Pay Doctor</button>
+                                <input type="hidden" name="payclinic_id" value="{{ clinic.id }}">
+                                <button class="btn btn-danger btn-sm mt=1 mb=3" type="submit">Pay Agent</button>
                             </form>
                         </td>
                     </tr>
@@ -99,15 +99,15 @@
         </tr>
     </thead>
     <tbody>
-        {% for bill in doctorbills %}
+        {% for bill in clinicbills %}
         <tr>
             <td>{{ bill.invoice }}</td>
             <td>{{ bill.invoice.assessment.claimant }}</td>
             <td>{{ bill.invoice.assessment.claimant.source }}</td>
             <td>{{ bill.invoice.report_type.abbreviation }}</td>
             <td>{{ bill.invoice.assessment.date }}</td>
-            <td>{{ bill.subtotal }}</td>
-            <td>{{ bill.tax }}</td>
+            <td>{{ bill.total }}</td>
+            <td>0.00</td>
             <td>{{ bill.total }}</td>
         </tr>
         {% endfor %}

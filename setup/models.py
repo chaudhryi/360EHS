@@ -28,6 +28,7 @@ class Agent(models.Model):
     rate_pr = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     rate_ns = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     rate_ex = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    rate_ar = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return self.first_name+" "+self.last_name
@@ -212,8 +213,38 @@ class ApplyPayment(models.Model):
         return reverse('applypayments-detail', kwargs={'pk': self.pk})
 
 
+class Expense(models.Model):    
+    EXPENSE_TYPE = [
+        ('Physician payout', 'Physician payout'),
+        ('Agent payout', 'Agent payout'),
+        ('Clinic rent', 'Clinic rent'),
+        ('Other expense', 'Other expense'),
+        ('Consulting fees', 'Consulting fees'),
+    ]
+    reference = models.CharField(max_length=15, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    description = models.CharField(max_length=100, choices=EXPENSE_TYPE)
+    payee = models.CharField(max_length=100, null=True, blank=True)
+    subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    note = models.CharField(max_length=200, null=True, blank=True, default = 'Expense')
+    abbreviation = models.CharField(max_length=2, null=True, blank=True, default='DR')
+    
+    def save(self, *args, **kwargs):
+        self.date = date.today()
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.payee + ' ' + str(self.total)
+    
+    def get_absolute_url(self):
+        return reverse('expenses-detail', kwargs={'pk': self.pk})
+
+
 class DoctorBill(models.Model):
     invoice = models.OneToOneField(Invoice, on_delete = models.CASCADE)
+    expense = models.ForeignKey(Expense, on_delete=models.SET_NULL, null=True, blank=True)
     bill_date = models.DateField(null=True, blank=True)
     subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True, default = 0)
     tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
@@ -232,7 +263,7 @@ class DoctorBill(models.Model):
 
 
 class AgentBill(models.Model):
-    assessment = models.OneToOneField(Assessment, on_delete = models.CASCADE)
+    invoice = models.OneToOneField(Invoice, on_delete = models.CASCADE)
     bill_date = models.DateField(null=True, blank=True)    
     total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
@@ -243,11 +274,11 @@ class AgentBill(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.assessment.agent.last_name
+        return self.invoice
 
 
 class ClinicBill(models.Model):
-    assessment = models.OneToOneField(Assessment, on_delete = models.CASCADE)
+    invoice = models.OneToOneField(Invoice, on_delete = models.CASCADE)
     bill_date = models.DateField(null=True, blank=True)
     total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
@@ -258,30 +289,8 @@ class ClinicBill(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.assessment.clinic.name
+        return self.invoice
 
 
-class Expense(models.Model):    
-    EXPENSE_TYPE = [
-        ('Physician payout', 'Physician payout'),
-        ('Agent payout', 'Agent payout'),
-        ('Clinic rent', 'Clinic rent'),
-        ('Other expense', 'Other expense'),
-        ('Consulting fees', 'Consulting fees'),
-    ]
-    reference = models.CharField(max_length=15, null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
-    description = models.CharField(max_length=100, choices=EXPENSE_TYPE)
-    payee = models.CharField(max_length=100, null=True, blank=True)
-    subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    tax = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    note = models.CharField(max_length=200, null=True, blank=True)
-    abbreviation = models.CharField(max_length=2, null=True, blank=True, default='DR')
 
-    def __str__(self):
-        return self.payee + ' ' + str(self.total)
-    
-    def get_absolute_url(self):
-        return reverse('expenses-detail', kwargs={'pk': self.pk})
     

@@ -10,8 +10,6 @@ from operator import attrgetter
 from itertools import chain
 
 
-
-
 def Index(request):
     return render(request, 'setup/index.html')
 
@@ -272,11 +270,13 @@ def InvoiceCreate(request):
     if request.method == 'POST':        
         form = InvoiceForm(request.POST)        
         if form.is_valid():
-   	        form.save()
+   	        invoice = form.save()
+        CreateAgentInvoice(invoice.id)
+        CreateClinicInvoice(invoice.id)
         return redirect('invoices-list')            
     else:
         reporttype_id = request.GET.get('reporttype_id')
-        assessment_id = request.GET.get('assessment_id')        
+        assessment_id = request.GET.get('assessment_id')
         source_id = request.GET.get('source_id')
         rate = Rate.objects.get(source=source_id, report_type=reporttype_id)
 
@@ -315,32 +315,32 @@ class InvoiceDeleteView(DeleteView):
 class RateListView(ListView):
     model = Rate
     form_class = RateForm
-    template_name = 'setup/rate_list.html'
+    template_name = 'setup/rate/rate_list.html'
     context_object_name = 'rates'
 
 
 class RateDetailView(DetailView):
     model = Rate
-    template_name = 'setup/rate_detail.html'
+    template_name = 'setup/rate/rate_detail.html'
     context_object_name = 'rate'
 
 
 class RateCreateView(CreateView):
     model = Rate
-    template_name = 'setup/rate_form.html'
+    template_name = 'setup/rate/rate_form.html'
     form_class = RateForm
     #initial = {"email": "Ijaz email"}
     
 
 class RateUpdateView(UpdateView):
     model = Rate
-    template_name = 'setup/rate_form.html'
+    template_name = 'setup/rate/rate_form.html'
     form_class = RateForm
     
 
 class RateDeleteView(DeleteView):
     model = Rate
-    template_name = 'setup/rate_confirm_delete.html'
+    template_name = 'setup/rate/rate_confirm_delete.html'
     context_object_name = 'rate'
     success_url = '/rates/'
     
@@ -440,36 +440,38 @@ def CreateDoctorInvoice(invoice_id):
     return
 
 
-def CreateAgentInvoice(assessment_id):
-    assessment = Assessment.objects.get(id=assessment_id)
-    abr = assessment.report_type.abbreviation
+def CreateAgentInvoice(invoice_id):
+    invoice = Invoice.objects.get(id=invoice_id)
+    abr = invoice.report_type.abbreviation
     if abr == 'IME':
-        bill = assessment.agent.rate_ime
+        bill = invoice.assessment.agent.rate_ime
     elif abr == 'AD':
-        bill = assessment.agent.rate_ad
+        bill = invoice.assessment.agent.rate_ad
     elif abr == 'PR':
-        bill = assessment.agent.rate_pr
+        bill = invoice.assessment.agent.rate_pr
     elif abr == 'NS':
-        bill = assessment.agent.rate_ns
+        bill = invoice.assessment.agent.rate_ns
     elif abr == 'EX':
-        bill = assessment.agent.rate_ex
+        bill = invoice.assessment.agent.rate_ex
+    elif abr == 'AR':
+        bill = invoice.assessment.agent.rate_ar
         
-    agentbill = AgentBill(assessment=assessment, bill_total=bill)
+    agentbill = AgentBill(invoice=invoice, total=bill)
     agentbill.save()
     return
 
 
-def CreateClinicInvoice(assessment_id):
-    assessment = Assessment.objects.get(id=assessment_id)
-    abr = assessment.report_type.abbreviation
+def CreateClinicInvoice(invoice_id):
+    invoice = Invoice.objects.get(id=invoice_id)
+    abr = invoice.report_type.abbreviation
     if abr == 'IME':
-        bill = assessment.clinic.rate_ime
+        bill = invoice.assessment.clinic.rate_ime
     elif abr == 'NS':
-        bill = assessment.clinic.rate_ns
+        bill = invoice.assessment.clinic.rate_ns
     else:
         return
 
-    clinicbill = ClinicBill(assessment=assessment, bill_total=bill)
+    clinicbill = ClinicBill(invoice=invoice, total=bill)
     clinicbill.save()
     return
 
@@ -565,11 +567,8 @@ def ReversePayment(request, item_id):
 
 def PayDoctors(request):
     doctors = Doctor.objects.all()
+    
     context = {'doctors': doctors}  
-
-    # if request.method == 'POST':
-
-    #     return render(request, 'setup/paydoctors.html', context)
 
     if request.method == 'POST':
         if 'doctor_id' in request.POST:
@@ -582,8 +581,7 @@ def PayDoctors(request):
             count = doctorbills.count()
 
             newcontext = {
-                'doctorbills': doctorbills,
-                'date': date.today(),
+                'doctorbills': doctorbills,                
                 'total': total,
                 'subtotal': subtotal,
                 'tax': tax,
@@ -592,7 +590,131 @@ def PayDoctors(request):
             }
             context.update(newcontext)
 
+        if 'paydoctor_id' in request.POST:
+            doctor_id = request.POST.get('paydoctor_id')
+            physician = Doctor.objects.get(id=doctor_id)
+            reference = request.POST.get('reference')
+            doctorbills = DoctorBill.objects.filter(invoice__assessment__doctor=doctor_id, paid=False)
+            payee = physician
+            total = doctorbills.aggregate(Sum('total'))["total__sum"]
+            subtotal = doctorbills.aggregate(Sum('subtotal'))["subtotal__sum"]
+            tax = doctorbills.aggregate(Sum('tax'))["tax__sum"]
+            description = 'Physician payout'
+
+            expense = Expense(
+                reference = reference,
+                description = description,
+                payee = payee,
+                subtotal = subtotal,
+                tax = tax,
+                total = total
+                )
+            expense.save()
+            
+            for bill in doctorbills:
+                bill.paid = True
+                bill.expense = expense
+                bill.paid_date = date.today()
+                bill.save()
+            
+
     return render(request, 'setup/paydoctors.html', context)
+
+
+def PayAgents(request):
+    agents = Agent.objects.all()
+    context = {'agents': agents}
+      
+
+    if request.method == 'POST':
+        if 'agent_id' in request.POST:
+            agent_id = request.POST.get('agent_id')
+            agent = Agent.objects.get(id=agent_id)
+            agentbills = AgentBill.objects.filter(invoice__assessment__agent=agent_id, paid=False)
+            total = agentbills.aggregate(Sum('total'))["total__sum"]
+            count = agentbills.count()
+
+            newcontext = {
+                'agentbills': agentbills,                
+                'total': total,
+                'count': count,
+                'agent': agent,
+            }
+            context.update(newcontext)
+
+        if 'payagent_id' in request.POST:
+            agent_id = request.POST.get('payagent_id')
+            agent = Agent.objects.get(id=agent_id)
+            reference = request.POST.get('reference')
+            agentbills = AgentBill.objects.filter(invoice__assessment__agent=agent_id, paid=False)
+            payee = agent
+            total = agentbills.aggregate(Sum('total'))["total__sum"]
+            description = 'Agent payout'
+
+            expense = Expense(
+                reference = reference,
+                description = description,
+                tax = '0.00',
+                payee = payee,
+                total = total
+                )
+            expense.save()
+            
+            for bill in agentbills:
+                bill.paid = True
+                bill.expense = expense
+                bill.paid_date = date.today()
+                bill.save()
+
+    return render(request, 'setup/payagents.html', context)
+
+
+def PayClinics(request):
+    clinics = Clinic.objects.all()
+    context = {'clinics': clinics}
+      
+
+    if request.method == 'POST':
+        if 'clinic_id' in request.POST:
+            clinic_id = request.POST.get('clinic_id')
+            clinic = Clinic.objects.get(id=clinic_id)
+            clinicbills = ClinicBill.objects.filter(invoice__assessment__clinic=clinic_id, paid=False)
+            total = clinicbills.aggregate(Sum('total'))["total__sum"]
+            count = clinicbills.count()
+
+            newcontext = {
+                'clinicbills': clinicbills,                
+                'total': total,
+                'count': count,
+                'clinic': clinic,
+            }
+            context.update(newcontext)
+
+        if 'payclinic_id' in request.POST:
+            clinic_id = request.POST.get('payclinic_id')
+            clinic = Clinic.objects.get(id=clinic_id)
+            reference = request.POST.get('reference')
+            clinicbills = ClinicBill.objects.filter(invoice__assessment__clinic=clinic_id, paid=False)
+            payee = clinic
+            total = clinicbills.aggregate(Sum('total'))["total__sum"]
+            description = 'Clinic payout'
+
+            expense = Expense(
+                reference = reference,
+                description = description,
+                tax = '0.00',
+                payee = payee,
+                total = total
+                )
+            expense.save()
+            
+            for bill in clinicbills:
+                bill.paid = True
+                bill.expense = expense
+                bill.paid_date = date.today()
+                bill.save()
+
+    return render(request, 'setup/payclinics.html', context)
 
 # -----------------------Expense Views---------------------------------------
 
