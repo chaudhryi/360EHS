@@ -48,7 +48,31 @@
       <td>${{ agent.rate_ex }}</td>
       <td>${{ agent.rate_ar }}</td>
     </tr>
-   
   </table>
+<hr>
+  <table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Invoice</th>
+            <th scope="col">Assessment Date</th>
+            <th scope="col">Total</th>
+            <th scope="col">Date Paid</th>
+            <th scope="col">Paid</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in bills %}
+        <tr>
+            <td>{{ item.invoice }}</a></td>
+            <td>{{ item.bill_date }}</td>
+            <td>${{ item.total }}</td>
+            <td>{{ item.paid_date }}</td>
+            <td>{{ item.paid }}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
 
 {% endblock content %}

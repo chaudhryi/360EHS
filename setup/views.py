@@ -36,6 +36,11 @@ class AgentDetailView(DetailView):
     template_name = 'setup/agent/agent_detail.html'
     context_object_name = 'agent'
 
+    def get_context_data(self, **kwargs):
+        context = super(AgentDetailView, self).get_context_data(**kwargs)
+        context['bills'] = AgentBill.objects.filter(invoice__assessment__agent=self.object)
+        return context
+
 
 class AgentCreateView(CreateView):
     model = Agent
@@ -422,6 +427,8 @@ class ApplyPaymentDeleteView(DeleteView):
 def CreateDoctorInvoice(invoice_id):
     invoice = Invoice.objects.get(id=invoice_id)
     abr = invoice.report_type.abbreviation
+    doctor = invoice.assessment.doctor
+
     if abr == 'IME':
         bill = invoice.assessment.doctor.rate_ime
     elif abr == 'AD':
@@ -435,7 +442,7 @@ def CreateDoctorInvoice(invoice_id):
     elif abr == 'AR':
         bill = invoice.assessment.doctor.rate_ar
 
-    doctorbill = DoctorBill(invoice=invoice, subtotal=bill)
+    doctorbill = DoctorBill(invoice=invoice, doctor=doctor, subtotal=bill)
     doctorbill.save()
     return
 
@@ -443,6 +450,8 @@ def CreateDoctorInvoice(invoice_id):
 def CreateAgentInvoice(invoice_id):
     invoice = Invoice.objects.get(id=invoice_id)
     abr = invoice.report_type.abbreviation
+    agent = invoice.assessment.agent
+
     if abr == 'IME':
         bill = invoice.assessment.agent.rate_ime
     elif abr == 'AD':
@@ -456,7 +465,7 @@ def CreateAgentInvoice(invoice_id):
     elif abr == 'AR':
         bill = invoice.assessment.agent.rate_ar
         
-    agentbill = AgentBill(invoice=invoice, total=bill)
+    agentbill = AgentBill(invoice=invoice, agent=agent, total=bill)
     agentbill.save()
     return
 
@@ -464,6 +473,8 @@ def CreateAgentInvoice(invoice_id):
 def CreateClinicInvoice(invoice_id):
     invoice = Invoice.objects.get(id=invoice_id)
     abr = invoice.report_type.abbreviation
+    clinic = invoice.assessment.clinic
+
     if abr == 'IME':
         bill = invoice.assessment.clinic.rate_ime
     elif abr == 'NS':
@@ -471,7 +482,7 @@ def CreateClinicInvoice(invoice_id):
     else:
         return
 
-    clinicbill = ClinicBill(invoice=invoice, total=bill)
+    clinicbill = ClinicBill(invoice=invoice, clinic=clinic, total=bill)
     clinicbill.save()
     return
 
@@ -607,7 +618,8 @@ def PayDoctors(request):
                 payee = payee,
                 subtotal = subtotal,
                 tax = tax,
-                total = total
+                total = total,
+                doctor = physician
                 )
             expense.save()
             
@@ -656,7 +668,8 @@ def PayAgents(request):
                 description = description,
                 tax = '0.00',
                 payee = payee,
-                total = total
+                total = total,
+                agent = agent
                 )
             expense.save()
             
@@ -704,7 +717,8 @@ def PayClinics(request):
                 description = description,
                 tax = '0.00',
                 payee = payee,
-                total = total
+                total = total,
+                clinic = clinic
                 )
             expense.save()
             

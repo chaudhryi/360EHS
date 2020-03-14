@@ -169,7 +169,7 @@ class Invoice(models.Model):
         super().save(*args, **kwargs)
         
     def __str__(self):
-        return self.number
+        return str(self.number)
     
     def get_absolute_url(self):
         return reverse('invoices-detail', kwargs={'pk': self.pk})
@@ -221,6 +221,10 @@ class Expense(models.Model):
         ('Other expense', 'Other expense'),
         ('Consulting fees', 'Consulting fees'),
     ]
+
+    clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE, blank=True, null=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, blank=True, null=True)
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE, blank=True, null=True)
     reference = models.CharField(max_length=15, null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     description = models.CharField(max_length=100, choices=EXPENSE_TYPE)
@@ -244,6 +248,7 @@ class Expense(models.Model):
 
 class DoctorBill(models.Model):
     invoice = models.OneToOneField(Invoice, on_delete = models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, blank=True, null=True)
     expense = models.ForeignKey(Expense, on_delete=models.SET_NULL, null=True, blank=True)
     bill_date = models.DateField(null=True, blank=True)
     subtotal = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True, default = 0)
@@ -259,11 +264,13 @@ class DoctorBill(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.invoice
+        return str(self.invoice)
 
 
 class AgentBill(models.Model):
     invoice = models.OneToOneField(Invoice, on_delete = models.CASCADE)
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE, blank=True, null=True)
+    expense = models.ForeignKey(Expense, on_delete=models.SET_NULL, null=True, blank=True)
     bill_date = models.DateField(null=True, blank=True)    
     total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
@@ -274,11 +281,13 @@ class AgentBill(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.invoice
+        return str(self.invoice)
 
 
 class ClinicBill(models.Model):
     invoice = models.OneToOneField(Invoice, on_delete = models.CASCADE)
+    clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE, blank=True, null=True)
+    expense = models.ForeignKey(Expense, on_delete=models.SET_NULL, null=True, blank=True)
     bill_date = models.DateField(null=True, blank=True)
     total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=False)
@@ -289,7 +298,7 @@ class ClinicBill(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.invoice
+        return str(self.invoice)
 
 
 
