@@ -52,6 +52,9 @@
                 <th scope="col">HST</th>
                 <th scope="col">Total</th>
                 <th scope="col">Status</th>
+                <th scope="col">View</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -67,7 +70,11 @@
                     <font color="green">PAID</font></span>
                     {% else %}
                     <font color="red">OUTSTANDING</font></span>
-                    {% endif %} </td>                
+                    {% endif %} </td>
+                <td><a class="material-icons" href="{% url 'invoices-detail' invoice.id %}">description</a></td>
+                <td><a class="material-icons" href="{% url 'invoices-update' invoice.id %}">edit</a></td>
+                <td><a class="material-icons" href="{% url 'invoices-delete' invoice.id %}">delete</a></td>
+                                    
             </tr>
             {% endfor %}
         </tbody>

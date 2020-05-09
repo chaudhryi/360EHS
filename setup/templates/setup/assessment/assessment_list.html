@@ -17,18 +17,18 @@
             <th scope="col">Date</th>
             <th scope="col">Source</th>
             <th scope="col">Clinic</th>  
-            <th scope="col">Invoice</th>          
+                    
         </tr>
     </thead>
     <tbody>
         {% for item in assessments %}
         <tr>
             <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.claimant.full_name }}</a></td>
-            <td>{{ item.doctor }}</td>            
+            <td>Dr. {{ item.doctor }}</td>            
             <td>{{ item.date }}</td>
             <td>{{ item.claimant.source }}</td>
             <td>{{ item.clinic }}</td>
-            <td><a class="btn btn-outline-primary btn-sm" href="{% url 'invoices-update' item.pk %}">+Invoice</a></td>
+            
         </tr>
         {% endfor %}
 

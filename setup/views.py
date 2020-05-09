@@ -8,6 +8,9 @@ from django.db.models import Sum
 from decimal import Decimal
 from operator import attrgetter
 from itertools import chain
+from django.http import HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
+
 
 
 def Index(request):
@@ -177,7 +180,6 @@ class SourceDeleteView(DeleteView):
 
 class ClaimantListView(ListView):
     model = Claimant
-    form_class = ClaimantForm
     template_name = 'setup/claimant/claimant_list.html'
     context_object_name = 'claimants'
 
@@ -187,11 +189,17 @@ class ClaimantDetailView(DetailView):
     template_name = 'setup/claimant/claimant_detail.html'
     context_object_name = 'claimant'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(ClaimantDetailView, self).get_context_data(*args, **kwargs)
+        context['assessments'] = Assessment.objects.all().filter(claimant=self.object).order_by('-date')
+        return context
+
 
 class ClaimantCreateView(CreateView):
     model = Claimant
     template_name = 'setup/claimant/claimant_form.html'
-    form_class = ClaimantForm  
+    form_class = ClaimantForm
+    success_url = "/claimants/"  
     
 
 class ClaimantUpdateView(UpdateView):
@@ -209,8 +217,7 @@ class ClaimantDeleteView(DeleteView):
 # -----------------------Assessment Views---------------------------------------
 
 class AssessmentListView(ListView):
-    model = Assessment
-    form_class = AssessmentForm
+    model = Assessment    
     template_name = 'setup/assessment/assessment_list.html'
     context_object_name = 'assessments'
 
@@ -226,17 +233,24 @@ class AssessmentDetailView(DetailView):
         context['reporttypes'] = ReportType.objects.all()        
         return context
 
-    
-class AssessmentCreateView(CreateView):
-    model = Assessment
-    template_name = 'setup/assessment/assessment_form.html'
-    form_class = AssessmentForm     
-    
+
+def AssessmentCreate(request):
+    if request.method == 'POST':        
+        form = AssessmentForm(request.POST)        
+        if form.is_valid():
+   	        assessment = form.save()
+        return redirect('assessments-detail',assessment.id)            
+    else:
+        claimant_id = request.GET.get('claimant_id')
+        form = AssessmentForm(initial={'claimant': claimant_id})
+    return render(request,'setup/assessment/assessment_form.html',{'form':form}) 
+
 
 class AssessmentUpdateView(UpdateView):
     model = Assessment
     template_name = 'setup/assessment/assessment_form.html'
     form_class = AssessmentForm
+
     
 
 class AssessmentDeleteView(DeleteView):
@@ -244,6 +258,9 @@ class AssessmentDeleteView(DeleteView):
     template_name = 'setup/assessment/assessment_confirm_delete.html'
     success_url = '/assessments/'
     context_object_name = 'assessment'
+
+    def get_success_url(self):
+        return reverse_lazy('claimants-detail', kwargs={'pk': self.object.claimant_id})
 
 # -----------------------Invoice Views---------------------------------------
 
@@ -272,19 +289,21 @@ def increment_invoice_number():
 
 
 def InvoiceCreate(request):
+    assessment_id = request.GET.get('assessment_id')
+    reporttype_id = request.GET.get('reporttype_id')
+    source_id = request.GET.get('source_id')
+
     if request.method == 'POST':        
-        form = InvoiceForm(request.POST)        
+        form = InvoiceForm(request.POST)
+        # form.fields['report_type'].disabled = True
+        # form.fields['assessment'].disabled = True        
         if form.is_valid():
    	        invoice = form.save()
         CreateAgentInvoice(invoice.id)
         CreateClinicInvoice(invoice.id)
-        return redirect('invoices-list')            
+        return redirect('assessments-detail', assessment_id)
     else:
-        reporttype_id = request.GET.get('reporttype_id')
-        assessment_id = request.GET.get('assessment_id')
-        source_id = request.GET.get('source_id')
         rate = Rate.objects.get(source=source_id, report_type=reporttype_id)
-
         amount = rate.amount
         tax = round(amount * Decimal(0.13),2)
         total = amount + tax        
@@ -299,6 +318,9 @@ def InvoiceCreate(request):
             'tax': tax,
             'total': total
         })
+        # form.fields['report_type'].disabled = True
+        # form.fields['assessment'].disabled = True
+
     return render(request,'setup/invoice/invoice_form.html',{'form':form})
             
 
@@ -310,18 +332,21 @@ class InvoiceUpdateView(UpdateView):
 
 class InvoiceDeleteView(DeleteView):
     model = Invoice
-    template_name = 'setup/invoice/assessment_confirm_delete.html'
+    template_name = 'setup/invoice/invoice_confirm_delete.html'
     success_url = '/invoices/'
     context_object_name = 'invoice'
+
+    def get_success_url(self):
+        return reverse_lazy('assessments-detail', kwargs={'pk': self.object.assessment_id})
 
 # -----------------------Rate Views---------------------------------------
     
 
 class RateListView(ListView):
-    model = Rate
-    form_class = RateForm
+    model = Rate       
     template_name = 'setup/rate/rate_list.html'
     context_object_name = 'rates'
+    ordering = ['source']
 
 
 class RateDetailView(DetailView):

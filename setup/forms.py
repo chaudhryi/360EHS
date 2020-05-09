@@ -50,6 +50,7 @@ class InvoiceForm(forms.ModelForm):
         model = Invoice
         fields = '__all__' 
         widgets = {'date': DateInput()}
+        
 
 
 class RateForm(forms.ModelForm):
