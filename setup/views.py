@@ -212,7 +212,9 @@ class ClaimantDeleteView(DeleteView):
     model = Claimant
     template_name = 'setup/claimant/claimant_confirm_delete.html'
     context_object_name = 'claimant'
-    success_url = '/claimants/'
+    
+    def get_success_url(self):
+        return reverse_lazy('claimants-list')
 
 # -----------------------Assessment Views---------------------------------------
 
