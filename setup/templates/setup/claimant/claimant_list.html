@@ -12,8 +12,7 @@
             <th scope="col">Claimant Name</th>
             <th scope="col">Insurance</th>
             <th scope="col">Claim#</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>            
+            <th scope="col">Date of MVC</th>
         </tr>
     </thead>
     <tbody>
@@ -21,9 +20,8 @@
         <tr>
             <td><a href="{% url 'claimants-detail' item.pk %}">{{ item.full_name }}</a></td>
             <td>{{ item.source.name }}</td>
-            <td>{{ item.claim_number }}</td>            
-            <td><a class="material-icons" href="{% url 'claimants-update' item.pk %}">edit</a></td>
-            <td><a class="material-icons" href="{% url 'claimants-delete' item.pk %}">delete</a></td>
+            <td>{{ item.claim_number }}</td>
+            <td>{{ item.date_of_accident }}</td>             
         </tr>
         {% endfor %}
 

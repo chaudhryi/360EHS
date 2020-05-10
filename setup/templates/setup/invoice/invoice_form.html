@@ -38,5 +38,19 @@
     <button id="btn1" type="submit" class="btn btn-primary">Save</button>
 </form>
 
+<script>
+    var sub = document.getElementById('id_subtotal')
+    var tax = document.getElementById('id_tax')
+    var tot = document.getElementById('id_total');
+
+    function calculate() {
+        var hst = 0.13 * sub.value;
+        tax.value = hst.toFixed(2);
+        var total = Number(sub.value) + Number(hst);
+        tot.value = total.toFixed(2);
+    }
+    sub.addEventListener('input', calculate);
+
+</script>
 
 {% endblock content%}
