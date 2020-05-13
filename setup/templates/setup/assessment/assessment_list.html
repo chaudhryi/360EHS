@@ -23,7 +23,7 @@
     <tbody>
         {% for item in assessments %}
         <tr>
-            <td><a href="{% url 'assessments-detail' item.pk %}">{{ item.claimant.full_name }}</a></td>
+            <td><a href="{% url 'claimants-detail' item.claimant.pk %}">{{ item.claimant.full_name }}</a></td>
             <td>Dr. {{ item.doctor }}</td>            
             <td>{{ item.date }}</td>
             <td>{{ item.claimant.source }}</td>

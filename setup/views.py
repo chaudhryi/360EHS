@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Assessment, Doctor, Clinic, Agent, Source, Rate, SourcePayment, ApplyPayment, DoctorBill, AgentBill, ClinicBill, Claimant, Invoice, ReportType, Expense
-from .forms import AgentForm, DoctorForm, ClinicForm, SourceForm, AssessmentForm, InvoiceForm, RateForm, SourcePaymentForm, ApplyPaymentForm, ClaimantForm, ExpenseForm
+from .models import Assessment, Doctor, Clinic, Agent, Source, Rate, SourcePayment, ApplyPayment, DoctorBill, AgentBill, ClinicBill, Claimant, Invoice, ReportType, Expense, AgentBill, DoctorBill
+from .forms import AgentForm, DoctorForm, ClinicForm, SourceForm, AssessmentForm, InvoiceForm, RateForm, SourcePaymentForm, ApplyPaymentForm, ClaimantForm, ExpenseForm, AgentBillForm, DoctorBillForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from datetime import date
 from django.contrib import messages
@@ -789,6 +789,75 @@ class ExpenseDeleteView(DeleteView):
     template_name = 'setup/expense/expense_confirm_delete.html'
     context_object_name = 'expense'
     success_url = '/expenses/'
+
+
+# -----------------------AgentBill Views---------------------------------------
+
+class AgentBillListView(ListView):
+    model = AgentBill    
+    template_name = 'setup/agentbill/agentbill_list.html'
+    context_object_name = 'agentbills'
+
+
+class AgentBillDetailView(DetailView):
+    model = AgentBill
+    template_name = 'setup/agentbill/agentbill_detail.html'
+    context_object_name = 'agentbill'
+
+
+class AgentBillCreateView(CreateView):
+    model = AgentBill
+    template_name = 'setup/agentbill/agentbill_form.html'
+    form_class = AgentBillForm  
+
+
+class AgentBillUpdateView(UpdateView):
+    model = AgentBill
+    template_name = 'setup/agentbill/agentbill_form.html'
+    form_class = AgentBillForm
+
+
+class AgentBillDeleteView(DeleteView):
+    model = AgentBill
+    template_name = 'setup/agentbill/agentbill_confirm_delete.html'
+    context_object_name = 'agentbill'
+
+    def get_success_url(self):
+        return reverse_lazy('agentbills-list')
+
+# -----------------------DoctorBill Views---------------------------------------
+
+class DoctorBillListView(ListView):
+    model = DoctorBill    
+    template_name = 'setup/doctorbill/doctorbill_list.html'
+    context_object_name = 'doctorbills'
+
+
+class DoctorBillDetailView(DetailView):
+    model = DoctorBill
+    template_name = 'setup/doctorbill/doctorbill_detail.html'
+    context_object_name = 'doctorbill'
+
+
+class DoctorBillCreateView(CreateView):
+    model = DoctorBill
+    template_name = 'setup/doctorbill/doctorbill_form.html'
+    form_class = DoctorBillForm  
+
+
+class DoctorBillUpdateView(UpdateView):
+    model = DoctorBill
+    template_name = 'setup/doctorbill/doctorbill_form.html'
+    form_class = DoctorBillForm
+
+
+class DoctorBillDeleteView(DeleteView):
+    model = DoctorBill
+    template_name = 'setup/doctorbill/doctorbill_confirm_delete.html'
+    context_object_name = 'doctorbill'
+
+    def get_success_url(self):
+        return reverse_lazy('doctorbills-list')
 
 
 def Ledger(request):

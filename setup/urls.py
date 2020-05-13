@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AgentListView, AgentDetailView, AgentCreateView, AgentUpdateView, AgentDeleteView, DoctorListView, DoctorDetailView, DoctorCreateView, DoctorUpdateView, DoctorDeleteView, ClinicListView, ClinicCreateView, ClinicDetailView, ClinicUpdateView, ClinicDeleteView, SourceListView, SourceCreateView, SourceDetailView, SourceUpdateView, SourceDeleteView, AssessmentCreate, AssessmentListView, AssessmentDetailView, AssessmentUpdateView, AssessmentDeleteView, InvoiceListView, InvoiceCreate, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView, RateListView, RateDetailView, RateCreateView,RateUpdateView, RateDeleteView, SourcePaymentListView, SourcePaymentDetailView, SourcePaymentCreateView, SourcePaymentUpdateView, SourcePaymentDeleteView, ApplyPaymentListView, ApplyPaymentDetailView, ApplyPaymentCreateView, ApplyPaymentUpdateView, ApplyPaymentDeleteView, ProcessPayment, ClaimantListView, ClaimantDetailView, ClaimantCreateView, ClaimantUpdateView, ClaimantDeleteView, ReversePayment, PayDoctors, PayAgents, PayClinics, ExpenseListView, ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, ExpenseDeleteView, Ledger
+from .views import AgentListView, AgentDetailView, AgentCreateView, AgentUpdateView, AgentDeleteView, DoctorListView, DoctorDetailView, DoctorCreateView, DoctorUpdateView, DoctorDeleteView, ClinicListView, ClinicCreateView, ClinicDetailView, ClinicUpdateView, ClinicDeleteView, SourceListView, SourceCreateView, SourceDetailView, SourceUpdateView, SourceDeleteView, AssessmentCreate, AssessmentListView, AssessmentDetailView, AssessmentUpdateView, AssessmentDeleteView, InvoiceListView, InvoiceCreate, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView, RateListView, RateDetailView, RateCreateView,RateUpdateView, RateDeleteView, SourcePaymentListView, SourcePaymentDetailView, SourcePaymentCreateView, SourcePaymentUpdateView, SourcePaymentDeleteView, ApplyPaymentListView, ApplyPaymentDetailView, ApplyPaymentCreateView, ApplyPaymentUpdateView, ApplyPaymentDeleteView, ProcessPayment, ClaimantListView, ClaimantDetailView, ClaimantCreateView, ClaimantUpdateView, ClaimantDeleteView, ReversePayment, PayDoctors, PayAgents, PayClinics, ExpenseListView, ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, ExpenseDeleteView, AgentBillListView, AgentBillDetailView, AgentBillCreateView, AgentBillUpdateView, AgentBillDeleteView, DoctorBillListView, DoctorBillDetailView, DoctorBillCreateView, DoctorBillUpdateView, DoctorBillDeleteView,Ledger
 from . import views
 
 
@@ -84,6 +84,21 @@ urlpatterns = [
     path('expenses/<int:pk>/', ExpenseDetailView.as_view(), name='expenses-detail'),
     path('expenses/<int:pk>/update/', ExpenseUpdateView.as_view(), name='expenses-update'),
     path('expenses/<int:pk>/delete/', ExpenseDeleteView.as_view(), name='expenses-delete'),
+
+#---------------AgentBill URLs-------------------------------------------  
+    path('agentbills/', AgentBillListView.as_view(), name='agentbills-list'),
+    path('agentbills/new/', AgentBillCreateView.as_view(), name='agentbills-new'),
+    path('agentbills/<int:pk>/', AgentBillDetailView.as_view(), name='agentbills-detail'),
+    path('agentbills/<int:pk>/update/', AgentBillUpdateView.as_view(), name='agentbills-update'),
+    path('agentbills/<int:pk>/delete/', AgentBillDeleteView.as_view(), name='agentbills-delete'),
+
+    #---------------DoctorBill URLs-------------------------------------------  
+    path('doctorbills/', DoctorBillListView.as_view(), name='doctorbills-list'),
+    path('doctorbills/new/', DoctorBillCreateView.as_view(), name='doctorbills-new'),
+    path('doctorbills/<int:pk>/', DoctorBillDetailView.as_view(), name='doctorbills-detail'),
+    path('doctorbills/<int:pk>/update/', DoctorBillUpdateView.as_view(), name='doctorbills-update'),
+    path('doctorbills/<int:pk>/delete/', DoctorBillDeleteView.as_view(), name='doctorbills-delete'),
+
 
     path('process/<int:pk>/', views.ProcessPayment, name='process'),
     path('reversepayment/<int:item_id>/', views.ReversePayment, name='reversepayment'),

@@ -193,7 +193,7 @@ class SourcePayment(models.Model):
         return self.source.name + " " + self.reference_number
     
     def get_absolute_url(self):
-        return reverse('sourcepayments-detail', kwargs={'pk': self.pk})
+        return reverse('sourcepayments-list')
 
 
 class ApplyPayment(models.Model):

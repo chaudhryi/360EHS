@@ -40,7 +40,9 @@
                         Billing
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'doctorbills-list' %}">List of Doctor Bills</a>
                         <a class="dropdown-item" href="{% url 'paydoctors' %}">Pay Doctors</a>
+                        <a class="dropdown-item" href="{% url 'agentbills-list' %}">List of Agent Bills</a>
                         <a class="dropdown-item" href="{% url 'payagents' %}">Pay Agents</a>
                         <a class="dropdown-item" href="{% url 'payclinics' %}">Pay Clinics</a>
                         <a class="dropdown-item" href="{% url 'expenses-list' %}">Expenses</a>                        

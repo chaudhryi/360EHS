@@ -1,0 +1,34 @@
+{% extends 'setup/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Add or Update an Agent's Bill</h2>
+<hr>
+<form method="POST" class="agent-form" novalidate>{% csrf_token %}
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            {{ form.invoice|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            {{ form.agent|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            {{ form.bill_date|as_crispy_field }}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            {{ form.total|as_crispy_field }}{{ form.paid|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            {{ form.paid_date|as_crispy_field }}
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+
+{% endblock content%}

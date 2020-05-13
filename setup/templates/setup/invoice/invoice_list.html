@@ -24,6 +24,7 @@
         <tr>
             <th scope="col">Invoice#</th>
             <th scope="col">Claimant</th>
+            <th scope="col">Report</th>
             <th scope="col">Source</th>
             <th scope="col">Date</th>
             <th scope="col">Subtotal</th>
@@ -31,15 +32,15 @@
             <th scope="col">Total</th>
             <th scope="col">Status</th>
             <th scope="col">View</th>
-            <th scope="col">Edit</th>              
         </tr>
     </thead>
     <tbody>
         {% for item in invoices %}
         <tr>
-            <td>{{ item.number }}</a></td>
+            <td><a href="{% url 'assessments-detail' item.assessment.pk %}">{{ item.number }}</a></td>
             <td>{{ item.assessment.claimant.full_name }}</td>
             <td>{{ item.assessment.claimant.source }}</td>
+            <td>{{ item.report_type.abbreviation }}</td>
             <td>{{ item.date }}</td>
             <td>{{ item.subtotal }}</td>
             <td>{{ item.tax }}</td>
@@ -50,8 +51,6 @@
                 <font color="red">OUTSTANDING</font></span>
                 {% endif %} </td>
             <td><a class="material-icons" href="{% url 'invoices-detail' item.pk %}">description</a></td>
-            <td><a class="material-icons" href="{% url 'invoices-update' item.pk %}">edit</a></td> 
-            
         </tr>
         {% endfor %}
     </tbody>

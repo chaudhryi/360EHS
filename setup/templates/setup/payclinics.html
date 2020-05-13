@@ -35,7 +35,7 @@
                         <td align="right">360 Essential Health Solutions</td>
                     </tr>
                     <tr>
-                        <td>Physician:</td>
+                        <td>Clinic:</td>
                         <td align="right">{{ clinic }}</td>
                     </tr>
                     <tr>
@@ -70,7 +70,7 @@
                             <form method="POST" action="{% url 'payclinics' %}" class="payment-form">{% csrf_token %}
                                 <input type="text" size="14" name="reference" placeholder="360EHS check #" required>
                                 <input type="hidden" name="payclinic_id" value="{{ clinic.id }}">
-                                <button class="btn btn-danger btn-sm mt=1 mb=3" type="submit">Pay Agent</button>
+                                <button class="btn btn-danger btn-sm mt=1 mb=3" type="submit">Pay Clinic</button>
                             </form>
                         </td>
                     </tr>

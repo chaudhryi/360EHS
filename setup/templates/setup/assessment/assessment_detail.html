@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h4>360 Assessment Detail Page for {{ assessment.claimant.full_name }} </h4>
+<h4>Invoice Detail : {{ assessment.claimant.full_name }} </h4>
 <a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'assessments-delete' assessment.id %}">Delete</a>
 <a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'assessments-update' assessment.id %}">Update</a>
 <hr>

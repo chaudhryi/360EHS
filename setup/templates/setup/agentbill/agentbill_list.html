@@ -1,0 +1,35 @@
+{% extends 'setup/base.html' %}
+
+{% block content %}
+
+<h3>List of Agent Bills</h3>
+<a class="btn btn-outline-primary btn-sm" href="{% url 'agentbills-new' %}">+Add</a>
+<p></p>
+
+<table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Agent Name</th>
+            <th scope="col">Invoice</th>
+            <th scope="col">Bill Date</th>
+            <th scope="col">Total</th>
+            <th scope="col">Paid</th>
+            <th scope="col">Paid Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in agentbills %}
+        <tr>
+            <td><a href="{% url 'agentbills-detail' item.pk %}">{{ item.agent.first_name }} {{ item.agent.last_name }}</a></td>
+            <td>{{ item.invoice }}</td>
+            <td>{{ item.bill_date }}</td>
+            <td>{{ item.total }}</td>
+            <td>{{ item.paid }}</td>
+            <td>{{ item.paid_date }}</td>
+        </tr>
+        {% endfor %}
+    
+    </tbody>
+</table>
+
+{% endblock content %}
