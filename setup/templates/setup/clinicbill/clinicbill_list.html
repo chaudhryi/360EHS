@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<h3>List of Doctor Bills</h3>
+<h3>List of Clinic Bills</h3>
 
 <table class="table table-sm table-striped">
     <thead class="thead-dark">
         <tr>
-            <th scope="col">Doctor Name</th>
+            <th scope="col">Clinic Name</th>
             <th scope="col">Invoice</th>
             <th scope="col">Bill Date</th>
             <th scope="col">Total</th>
@@ -16,12 +16,12 @@
         </tr>
     </thead>
     <tbody>
-        {% for item in doctorbills %}
+        {% for item in clinicbills %}
         <tr>
             {% if item.paid %}
-            <td>{{ item.doctor.first_name }} {{ item.doctor.last_name }}</td>
+            <td>{{ item.clinic.name }} </td>
             {% else %}
-                <td><a href="{% url 'doctorbills-detail' item.pk %}">{{ item.doctor.first_name }} {{ item.doctor.last_name }}</a></td>
+                <td><a href="{% url 'clinicbills-detail' item.pk %}">{{ item.clinic.name }} </a></td>
             {% endif %}
             <td>{{ item.invoice }}</td>
             <td>{{ item.bill_date }}</td>

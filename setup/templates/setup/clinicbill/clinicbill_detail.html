@@ -2,26 +2,26 @@
 
 {% block content %}
 
-<h4>Agent Bill Detail Page for {{ agentbill.agent.first_name }} {{ agentbill.agent.last_name }}</h4>
+<h4>Clinic Bill Detail Page for {{ clinicbill.clinic.name }} </h4>
 <button type="button" class="btn btn-danger btn-sm mt=1 mb=1" data-toggle="modal"
     data-target="#deleteModal">Delete</button>
-<a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'agentbills-update' agentbill.id %}">Update</a>
+<a class="btn btn-primary btn-sm mt=1 mb=1" href="{% url 'clinicbills-update' clinicbill.id %}">Update</a>
 <hr>
 
     <div class="form-group col-md-12 mb-0">
-        <b>Invoice:</b> {{ agentbill.invoice }}  
+        <b>Invoice:</b> {{ clinicbill.invoice }}  
     </div>    
     <div class="form-group col-md-12 mb-0">
-        <b>Invoice Date:</b> {{ agentbill.bill_date }}
+        <b>Bill Date:</b> {{ clinicbill.bill_date }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Total:</b> {{ agentbill.total }}
+        <b>Total:</b> {{ clinicbill.total }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Paid:</b> {{ agentbill.paid }}
+        <b>Paid:</b> {{ doctorbill.paid }}
     </div>
     <div class="form-group col-md-12 mb-0">
-        <b>Paid Date:</b> {{ agentbill.paid_date }}
+        <b>Date Paid:</b> {{ doctorbill.paid_date }}
     </div>
 
 <hr>
@@ -32,17 +32,17 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete Claimant</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Delete Clinic Bill</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete the bill for {{ agentbill.agent.first_name }} {{ agentbill.agent.last_name }}</p>
+                <p>Are you sure you want to delete the bill for {{ clinicbill.clinic.name }}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <form method="POST" action="{% url 'agentbills-delete' agentbill.id %}">
+                <form method="POST" action="{% url 'clinicbills-delete' clinicbill.id %}">
                     {% csrf_token %}<input class="btn btn-danger" type="submit" value="Delete">
                 </form>
             </div>

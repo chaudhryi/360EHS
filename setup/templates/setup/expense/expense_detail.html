@@ -20,13 +20,71 @@
     <b>Payee: </b> {{ expense.payee }}
 </div>
 <div class="form-group col-md-12 mb-0">
-    <b>Subtotal: </b> {{ expense.subtotal }}
+    <b>Total: </b> {{ expense.total }}
 </div>
 <div class="form-group col-md-12 mb-0">
     <b>Note: </b> {{ expense.note }}
 </div>
 <hr>
 
+{% if agentbills %}
+  <table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Agent</th>
+            <th scope="col">Doctor</th>
+            <th scope="col">Invoice</th>
+            <th scope="col">Bill Date</th>
+            <th scope="col">Total</th>
+            <th scope="col">Paid Date</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in agentbills %}
+        <tr>
+            <td>{{ item.agent }}</a></td>
+            <td>{{ item.invoice.assessment.doctor }}</a></td>
+            <td>{{ item.invoice }}</td>
+            <td>{{ item.bill_date }}</td>
+            <td>${{ item.total }}</td>
+            <td>{{ item.paid_date }}</td>
+            
+        </tr>
+        {% endfor %}
 
+    </tbody>
+</table>
+{% endif %}
+
+{% if doctorbills %}
+  <table class="table table-sm table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Doctor</th>
+            <th scope="col">Source</th>
+            <th scope="col">Invoice</th>
+            <th scope="col">Bill Date</th>
+            <th scope="col">Total</th>
+            <th scope="col">Paid Date</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in doctorbills %}
+        <tr>
+            <td>{{ item.doctor }}</a></td>
+            <td>{{ item.invoice.assessment.claimant.source }}</a></td>
+            <td>{{ item.invoice }}</td>
+            <td>{{ item.bill_date }}</td>
+            <td>${{ item.total }}</td>
+            <td>{{ item.paid_date }}</td>
+            
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+{% endif %}
 
 {% endblock content %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Agent, Doctor, Clinic, Source, Assessment, Rate, SourcePayment, ApplyPayment, Claimant, Invoice, Expense, AgentBill, DoctorBill
+from .models import Agent, Doctor, Clinic, Source, Assessment, Rate, SourcePayment, ApplyPayment, Claimant, Invoice, Expense, AgentBill, DoctorBill, ClinicBill
 
 
 class DateInput(forms.DateInput):
@@ -88,5 +88,11 @@ class AgentBillForm(forms.ModelForm):
 class DoctorBillForm(forms.ModelForm):
     class Meta:
         model = DoctorBill
+        fields = '__all__'
+        widgets = {'paid_date': DateInput()}
+
+class ClinicBillForm(forms.ModelForm):
+    class Meta:
+        model = ClinicBill
         fields = '__all__'
         widgets = {'paid_date': DateInput()}

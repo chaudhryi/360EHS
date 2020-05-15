@@ -27,7 +27,7 @@
         <td>{{item.date}}</td>
 
         {% if item.abbreviation == 'DR' %}
-            <td>{{item.total}}</td>
+            <td><a href="{% url 'expenses-detail' item.id %}">{{item.total}}</a></td>
             <td>{{item.tax}}</td>
             <td></td>
             <td></td>
@@ -38,7 +38,7 @@
         {% if item.abbreviation == 'CR' %}
             <td></td>
             <td></td>
-            <td>{{item.amount}}</td>
+            <td>{{item.amount}} {{item.id}}</td>
             <td>{{item.tax}}</td>
             <td>{{item.source}}</td>
             <td>#{{item.reference_number}}</td>

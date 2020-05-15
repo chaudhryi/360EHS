@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AgentListView, AgentDetailView, AgentCreateView, AgentUpdateView, AgentDeleteView, DoctorListView, DoctorDetailView, DoctorCreateView, DoctorUpdateView, DoctorDeleteView, ClinicListView, ClinicCreateView, ClinicDetailView, ClinicUpdateView, ClinicDeleteView, SourceListView, SourceCreateView, SourceDetailView, SourceUpdateView, SourceDeleteView, AssessmentCreate, AssessmentListView, AssessmentDetailView, AssessmentUpdateView, AssessmentDeleteView, InvoiceListView, InvoiceCreate, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView, RateListView, RateDetailView, RateCreateView,RateUpdateView, RateDeleteView, SourcePaymentListView, SourcePaymentDetailView, SourcePaymentCreateView, SourcePaymentUpdateView, SourcePaymentDeleteView, ApplyPaymentListView, ApplyPaymentDetailView, ApplyPaymentCreateView, ApplyPaymentUpdateView, ApplyPaymentDeleteView, ProcessPayment, ClaimantListView, ClaimantDetailView, ClaimantCreateView, ClaimantUpdateView, ClaimantDeleteView, ReversePayment, PayDoctors, PayAgents, PayClinics, ExpenseListView, ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, ExpenseDeleteView, AgentBillListView, AgentBillDetailView, AgentBillCreateView, AgentBillUpdateView, AgentBillDeleteView, DoctorBillListView, DoctorBillDetailView, DoctorBillCreateView, DoctorBillUpdateView, DoctorBillDeleteView,Ledger
+from .views import AgentListView, AgentDetailView, AgentCreateView, AgentUpdateView, AgentDeleteView, DoctorListView, DoctorDetailView, DoctorCreateView, DoctorUpdateView, DoctorDeleteView, ClinicListView, ClinicCreateView, ClinicDetailView, ClinicUpdateView, ClinicDeleteView, SourceListView, SourceCreateView, SourceDetailView, SourceUpdateView, SourceDeleteView, AssessmentCreate, AssessmentListView, AssessmentDetailView, AssessmentUpdateView, AssessmentDeleteView, InvoiceListView, InvoiceCreate, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView, RateListView, RateDetailView, RateCreateView,RateUpdateView, RateDeleteView, SourcePaymentListView, SourcePaymentDetailView, SourcePaymentCreateView, SourcePaymentUpdateView, SourcePaymentDeleteView, ApplyPaymentListView, ApplyPaymentDetailView, ApplyPaymentCreateView, ApplyPaymentUpdateView, ApplyPaymentDeleteView, ProcessPayment, ClaimantListView, ClaimantDetailView, ClaimantCreateView, ClaimantUpdateView, ClaimantDeleteView, ReversePayment, PayDoctors, PayAgents, PayClinics, ExpenseListView, ExpenseDetailView, ExpenseCreateView, ExpenseUpdateView, ExpenseDeleteView, AgentBillListView, AgentBillDetailView, AgentBillCreateView, AgentBillUpdateView, AgentBillDeleteView, DoctorBillListView, DoctorBillDetailView, DoctorBillCreateView, DoctorBillUpdateView, DoctorBillDeleteView,ClinicBillListView, ClinicBillDetailView, ClinicBillCreateView, ClinicBillUpdateView,ClinicBillDeleteView, Ledger
 from . import views
 
 
@@ -98,6 +98,13 @@ urlpatterns = [
     path('doctorbills/<int:pk>/', DoctorBillDetailView.as_view(), name='doctorbills-detail'),
     path('doctorbills/<int:pk>/update/', DoctorBillUpdateView.as_view(), name='doctorbills-update'),
     path('doctorbills/<int:pk>/delete/', DoctorBillDeleteView.as_view(), name='doctorbills-delete'),
+
+    #---------------ClinicBill URLs-------------------------------------------  
+    path('clinicbills/', ClinicBillListView.as_view(), name='clinicbills-list'),
+    path('clinicbills/new/', ClinicBillCreateView.as_view(), name='clinicbills-new'),
+    path('clinicbills/<int:pk>/', ClinicBillDetailView.as_view(), name='clinicbills-detail'),
+    path('clinicbills/<int:pk>/update/', ClinicBillUpdateView.as_view(), name='clinicbills-update'),
+    path('clinicbills/<int:pk>/delete/', ClinicBillDeleteView.as_view(), name='clinicbills-delete'),
 
 
     path('process/<int:pk>/', views.ProcessPayment, name='process'),

@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h2>Update an Doctor's Bill</h2>
+<h2>Update a Clinic's Bill</h2>
 <hr>
 <form method="POST" class="agent-form" novalidate>{% csrf_token %}
     <div class="form-row">
@@ -11,19 +11,14 @@
             {{ form.invoice|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
-            {{ form.doctor|as_crispy_field }}
+            {{ form.clinic|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
             {{ form.bill_date|as_crispy_field }}
         </div>
     </div>
     <div class="form-row">
-        <div class="form-group col-md-4 mb-0">
-            {{ form.subtotal|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-4 mb-0">
-            {{ form.tax|as_crispy_field }}
-        </div>
+        
         <div class="form-group col-md-4 mb-0">
             {{ form.total|as_crispy_field }} 
         </div>
@@ -31,24 +26,12 @@
         <div class="form-group col-md-4 mb-0">
             {{ form.paid_date|as_crispy_field }}
         </div>
+        
     </div>
     {{ form.paid|as_crispy_field }}
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
-<script>
-    var sub = document.getElementById('id_subtotal')
-    var tax = document.getElementById('id_tax')
-    var tot = document.getElementById('id_total');
 
-    function calculate() {
-        var hst = 0.13 * sub.value;
-        tax.value = hst.toFixed(2);
-        var total = Number(sub.value) + Number(hst);
-        tot.value = total.toFixed(2);
-    }
-    sub.addEventListener('input', calculate);
-
-</script>
 
 {% endblock content%}

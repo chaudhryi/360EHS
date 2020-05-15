@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Assessment, Doctor, Clinic, Agent, Source, Rate, SourcePayment, ApplyPayment, DoctorBill, AgentBill, ClinicBill, Claimant, Invoice, ReportType, Expense, AgentBill, DoctorBill
-from .forms import AgentForm, DoctorForm, ClinicForm, SourceForm, AssessmentForm, InvoiceForm, RateForm, SourcePaymentForm, ApplyPaymentForm, ClaimantForm, ExpenseForm, AgentBillForm, DoctorBillForm
+from .models import Assessment, Doctor, Clinic, Agent, Source, Rate, SourcePayment, ApplyPayment, DoctorBill, AgentBill, ClinicBill, Claimant, Invoice, ReportType, Expense, AgentBill, DoctorBill, ClinicBill
+from .forms import AgentForm, DoctorForm, ClinicForm, SourceForm, AssessmentForm, InvoiceForm, RateForm, SourcePaymentForm, ApplyPaymentForm, ClaimantForm, ExpenseForm, AgentBillForm, DoctorBillForm, ClinicBillForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from datetime import date
 from django.contrib import messages
@@ -771,6 +771,12 @@ class ExpenseDetailView(DetailView):
     template_name = 'setup/expense/expense_detail.html'
     context_object_name = 'expense'
 
+    def get_context_data(self, **kwargs):
+        context = super(ExpenseDetailView, self).get_context_data(**kwargs)
+        context['agentbills'] = AgentBill.objects.filter(expense=self.object)
+        context['doctorbills'] = DoctorBill.objects.filter(expense=self.object)        
+        return context
+
 
 class ExpenseCreateView(CreateView):
     model = Expense
@@ -859,15 +865,57 @@ class DoctorBillDeleteView(DeleteView):
     def get_success_url(self):
         return reverse_lazy('doctorbills-list')
 
+# -----------------------ClinicBill Views---------------------------------------
+
+class ClinicBillListView(ListView):
+    model = ClinicBill    
+    template_name = 'setup/clinicbill/clinicbill_list.html'
+    context_object_name = 'clinicbills'
+
+
+class ClinicBillDetailView(DetailView):
+    model = ClinicBill
+    template_name = 'setup/clinicbill/clinicbill_detail.html'
+    context_object_name = 'clinicbill'
+
+
+class ClinicBillCreateView(CreateView):
+    model = ClinicBill
+    template_name = 'setup/clinicbill/clinicbill_form.html'
+    form_class = ClinicBillForm  
+
+
+class ClinicBillUpdateView(UpdateView):
+    model = ClinicBill
+    template_name = 'setup/clinicbill/clinicbill_form.html'
+    form_class = ClinicBillForm
+
+
+class ClinicBillDeleteView(DeleteView):
+    model = ClinicBill
+    template_name = 'setup/clinicbill/clinicbill_confirm_delete.html'
+    context_object_name = 'clinicbill'
+
+    def get_success_url(self):
+        return reverse_lazy('clinicbills-list')
+
 
 def Ledger(request):
     debit = Expense.objects.only('date', 'total', 'abbreviation', 'description')
-    total_debit = debit.aggregate(Sum('total'))["total__sum"]
-    total_debit_tax = debit.aggregate(Sum('tax'))["tax__sum"]
+    if debit:
+        total_debit = debit.aggregate(Sum('total'))["total__sum"]
+        total_debit_tax = debit.aggregate(Sum('tax'))["tax__sum"]
+    else:
+        total_debit = 0
+        total_debit_tax = 0
 
     credit = SourcePayment.objects.only('date', 'amount', 'abbreviation', 'source')
-    total_credit = credit.aggregate(Sum('amount'))["amount__sum"]
-    total_credit_tax = credit.aggregate(Sum('tax'))["tax__sum"]
+    if credit:
+        total_credit = credit.aggregate(Sum('amount'))["amount__sum"]
+        total_credit_tax = credit.aggregate(Sum('tax'))["tax__sum"]
+    else:
+        total_credit = 0
+        total_credit_tax = 0
 
     combined = sorted(chain(debit, credit),key=attrgetter('date'), reverse=True)
     balance = (total_credit-total_debit) + (total_credit_tax - total_debit_tax)

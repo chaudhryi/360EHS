@@ -240,7 +240,7 @@ class Expense(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return self.payee + ' ' + str(self.total)
+        return self.payee 
     
     def get_absolute_url(self):
         return reverse('expenses-detail', kwargs={'pk': self.pk})
@@ -265,6 +265,9 @@ class DoctorBill(models.Model):
 
     def __str__(self):
         return str(self.invoice)
+    
+    def get_absolute_url(self):
+        return reverse('doctorbills-detail', kwargs={'pk': self.pk})
 
 
 class AgentBill(models.Model):
@@ -282,6 +285,9 @@ class AgentBill(models.Model):
 
     def __str__(self):
         return str(self.invoice)
+    
+    def get_absolute_url(self):
+        return reverse('agentbills-detail', kwargs={'pk': self.pk})
 
 
 class ClinicBill(models.Model):
@@ -299,6 +305,9 @@ class ClinicBill(models.Model):
 
     def __str__(self):
         return str(self.invoice)
+    
+    def get_absolute_url(self):
+        return reverse('clinicbills-detail', kwargs={'pk': self.pk})
 
 
 
