@@ -468,7 +468,7 @@ def CreateDoctorInvoice(invoice_id):
         bill = invoice.assessment.doctor.rate_ex
     elif abr == 'AR':
         bill = invoice.assessment.doctor.rate_ar
-
+    
     doctorbill = DoctorBill(invoice=invoice, doctor=doctor, subtotal=bill)
     doctorbill.save()
     return
