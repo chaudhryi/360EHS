@@ -28,6 +28,11 @@
     <div class="form-group col-md-12 mb-0">
         <b>Time:</b> {{ assessment.time }}
     </div>
+    <!-- Default switch -->
+    <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="customSwitches">
+        <label class="custom-control-label" for="customSwitches">Attended</label>
+    </div>
 <hr>
 <form method="GET" action="{% url 'invoices-new' %}" class="payment-form" novalidate>{% csrf_token %}
     <select name="reporttype_id">
