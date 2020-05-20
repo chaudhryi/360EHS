@@ -1,0 +1,1 @@
+web: gunicorn EHS.wsgi --log-file -

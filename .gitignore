@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.bak
 
 # C extensions
 *.so
@@ -55,6 +56,7 @@ coverage.xml
 *.log
 local_settings.py
 db.sqlite3
+*.sqlite3
 
 # Flask stuff:
 instance/
@@ -108,7 +110,7 @@ static_collected
 
 # Exclude machine-specific vs code settings
 .vscode/settings.json
-© 2020 GitHub, Inc.
+ï¿½ 2020 GitHub, Inc.
 Terms
 Privacy
 Security
