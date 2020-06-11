@@ -29,6 +29,7 @@ class Agent(models.Model):
     rate_ns = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     rate_ex = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     rate_ar = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    rate_lcn = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return self.first_name+" "+self.last_name
@@ -54,6 +55,7 @@ class Doctor(models.Model):
     rate_ns = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     rate_ex = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     rate_ar = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    rate_lcn = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return self.first_name + " " + self.last_name
@@ -117,16 +119,16 @@ class Claimant(models.Model):
     title = models.CharField(max_length=4, choices=GENDER_CHOICES)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    date_of_birth = models.DateField()  
+    date_of_birth = models.DateField(blank=True, null=True)  
     claim_number = models.CharField(max_length=20, null=True, blank=True)
     date_of_accident = models.DateField(blank=True, null=True)
-    
     full_name = models.CharField(max_length=100)
-    age = models.IntegerField()
+    age = models.IntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        import datetime                
-        self.age = int((datetime.date.today() - self.date_of_birth).days / 365.25)
+        import datetime
+        if self.date_of_birth:                
+            self.age = int((datetime.date.today() - self.date_of_birth).days / 365.25)
         self.full_name = self.title + ' ' + self.first_name + ' ' + self.last_name
         super().save(*args, **kwargs)
 
@@ -162,6 +164,7 @@ class Invoice(models.Model):
     total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     applied = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True, default=0)    
     balance = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    notes = models.CharField(max_length=250, blank=True, null=True, default="")
     paid = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):        

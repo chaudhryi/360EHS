@@ -131,8 +131,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+LOGIN_REDIRECT_URL = 'index'
 
-
+LOGOUT_REDIRECT_URL = 'login'
 
 
 LOGGING = {

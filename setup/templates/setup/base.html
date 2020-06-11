@@ -12,6 +12,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     {% load static %}
 
@@ -37,13 +39,32 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Billing
+                        Agents
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{% url 'doctorbills-list' %}">List of Doctor Bills</a>
-                        <a class="dropdown-item" href="{% url 'paydoctors' %}">Pay Doctors</a>
+                        <a class="dropdown-item" href="{% url 'agents-list' %}">Setup Agents</a>
                         <a class="dropdown-item" href="{% url 'agentbills-list' %}">List of Agent Bills</a>
                         <a class="dropdown-item" href="{% url 'payagents' %}">Pay Agents</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Physicians
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'doctors-list' %}">Setup Doctors</a>
+                        <a class="dropdown-item" href="{% url 'doctorbills-list' %}">List of Doctor Bills</a>
+                        <a class="dropdown-item" href="{% url 'paydoctors' %}">Pay Doctors</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Clinics
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'clinics-list' %}">Setup Clinics</a>
                         <a class="dropdown-item" href="{% url 'clinicbills-list' %}">List of Clinic Bills</a>
                         <a class="dropdown-item" href="{% url 'payclinics' %}">Pay Clinics</a>
                         <a class="dropdown-item" href="{% url 'expenses-list' %}">Expenses</a>                        
@@ -52,14 +73,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Setup
+                        Sources
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{% url 'agents-list' %}">Agents</a>
-                        <a class="dropdown-item" href="{% url 'doctors-list' %}">Doctors</a>
-                        <a class="dropdown-item" href="{% url 'clinics-list' %}">Clinics</a>
                         <a class="dropdown-item" href="{% url 'sources-list' %}">Sources</a>
                         <a class="dropdown-item" href="{% url 'rates-list' %}">Rates</a>
+                        <a class="dropdown-item" href="{% url 'sourcepayments-list' %}">Receive Source Payments</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -71,27 +90,31 @@
                         <a class="dropdown-item" href="{% url 'claimants-list' %}">List of Claimants</a>             
                         <a class="dropdown-item" href="{% url 'assessments-list' %}">List of Assessments</a> 
                         <a class="dropdown-item" href="{% url 'invoices-list' %}">List of Invoices</a>
-                        <a class="dropdown-item" href="{% url 'sourcepayments-list' %}">Receive Source Payments</a>
                         <a class="dropdown-item" href="{% url 'applypayments-list' %}">Apply Payments to Invoices</a>               
                     </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'ledger' %}">Ledger</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'about' %}">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
-                </li>
+               
             </ul>
         </div>
+
+        {% if user.is_authenticated %}
+        <div>
+            <a class="btn btn-outline-danger btn-sm" href="{% url 'logout' %}" style="color:white">Logout {{user.first_name}}</a>
+        </div>
+        {% else %}
+        <div>
+                <a class="nav-link" href="{% url 'login'%}?next={{request.path}}">Login <span class="sr-only">(current)</span></a>
+        </div>
+        {% endif %}
     </nav>
     <div class="container">
         {% block content %}
         {% endblock content %}
     </div>
-
+    
         
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

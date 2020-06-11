@@ -17,13 +17,6 @@ def Index(request):
     return render(request, 'setup/index.html')
 
 
-def About(request):
-    return render(request, 'setup/about.html')
-
-
-def Contact(request):
-    return render(request, 'setup/contact.html')
-
 # -----------------------Agent Views---------------------------------------
 
 
@@ -182,6 +175,7 @@ class ClaimantListView(ListView):
     model = Claimant
     template_name = 'setup/claimant/claimant_list.html'
     context_object_name = 'claimants'
+    ordering = ['-pk']
 
 
 class ClaimantDetailView(DetailView):
@@ -468,6 +462,8 @@ def CreateDoctorInvoice(invoice_id):
         bill = invoice.assessment.doctor.rate_ex
     elif abr == 'AR':
         bill = invoice.assessment.doctor.rate_ar
+    elif abr == 'LCN':
+        bill = invoice.assessment.doctor.rate_lcn
     
     doctorbill = DoctorBill(invoice=invoice, doctor=doctor, subtotal=bill)
     doctorbill.save()
@@ -491,6 +487,8 @@ def CreateAgentInvoice(invoice_id):
         bill = invoice.assessment.agent.rate_ex
     elif abr == 'AR':
         bill = invoice.assessment.agent.rate_ar
+    elif abr == 'LCN':
+        bill = invoice.assessment.agent.rate_lcn
         
     agentbill = AgentBill(invoice=invoice, agent=agent, total=bill)
     agentbill.save()
@@ -605,7 +603,6 @@ def ReversePayment(request, item_id):
 
 def PayDoctors(request):
     doctors = Doctor.objects.all()
-    
     context = {'doctors': doctors}  
 
     if request.method == 'POST':
@@ -634,9 +631,18 @@ def PayDoctors(request):
             reference = request.POST.get('reference')
             doctorbills = DoctorBill.objects.filter(invoice__assessment__doctor=doctor_id, paid=False)
             payee = physician
-            total = doctorbills.aggregate(Sum('total'))["total__sum"]
-            subtotal = doctorbills.aggregate(Sum('subtotal'))["subtotal__sum"]
-            tax = doctorbills.aggregate(Sum('tax'))["tax__sum"]
+
+            billtotal = 0.00
+            taxtotal = 0.00
+            subtotal = 0.00
+
+            for bill in doctorbills:
+                if request.POST.get(str(bill.id)):
+                    amt = float(request.POST.get(str(bill.id)))
+                    billtotal += amt
+                    taxtotal += float(bill.tax)
+                    subtotal += float(bill.subtotal)
+
             description = 'Physician payout'
 
             expense = Expense(
@@ -644,37 +650,37 @@ def PayDoctors(request):
                 description = description,
                 payee = payee,
                 subtotal = subtotal,
-                tax = tax,
-                total = total,
+                tax = taxtotal,
+                total = billtotal,
                 doctor = physician
                 )
             expense.save()
             
             for bill in doctorbills:
-                bill.paid = True
-                bill.expense = expense
-                bill.paid_date = date.today()
-                bill.save()
+                if request.POST.get(str(bill.id)):
+                    bill.paid = True
+                    bill.expense = expense
+                    bill.paid_date = date.today()
+                    bill.save()
             
-
     return render(request, 'setup/paydoctors.html', context)
 
 
 def PayAgents(request):
     agents = Agent.objects.all()
     context = {'agents': agents}
-      
 
     if request.method == 'POST':
         if 'agent_id' in request.POST:
             agent_id = request.POST.get('agent_id')
             agent = Agent.objects.get(id=agent_id)
-            agentbills = AgentBill.objects.filter(invoice__assessment__agent=agent_id, paid=False)
+            agentbills = agent.agentbill_set.filter(agent=agent_id, paid=False)
+            # agentbills = AgentBill.objects.filter(invoice__assessment__agent=agent_id, paid=False)
             total = agentbills.aggregate(Sum('total'))["total__sum"]
             count = agentbills.count()
 
             newcontext = {
-                'agentbills': agentbills,                
+                'agentbills': agentbills,
                 'total': total,
                 'count': count,
                 'agent': agent,
@@ -685,26 +691,33 @@ def PayAgents(request):
             agent_id = request.POST.get('payagent_id')
             agent = Agent.objects.get(id=agent_id)
             reference = request.POST.get('reference')
-            agentbills = AgentBill.objects.filter(invoice__assessment__agent=agent_id, paid=False)
+            agentbills = agent.agentbill_set.filter(agent=agent_id, paid=False)
             payee = agent
-            total = agentbills.aggregate(Sum('total'))["total__sum"]
+
+            billtotal = 0.00
+            for bill in agentbills:
+                if request.POST.get(str(bill.id)):
+                    amt = float(request.POST.get(str(bill.id)))
+                    billtotal += amt
+
             description = 'Agent payout'
 
             expense = Expense(
-                reference = reference,
-                description = description,
-                tax = '0.00',
-                payee = payee,
-                total = total,
-                agent = agent
-                )
+                reference=reference,
+                description=description,
+                tax='0.00',
+                payee=payee,
+                total=billtotal,
+                agent=agent
+            )
             expense.save()
-            
+
             for bill in agentbills:
-                bill.paid = True
-                bill.expense = expense
-                bill.paid_date = date.today()
-                bill.save()
+                if request.POST.get(str(bill.id)):
+                    bill.paid = True
+                    bill.expense = expense
+                    bill.paid_date = date.today()
+                    bill.save()
 
     return render(request, 'setup/payagents.html', context)
 

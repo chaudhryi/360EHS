@@ -5,8 +5,6 @@ from . import views
 
 urlpatterns = [
     path('', views.Index, name='index'),
-    path('about/', views.About, name='about'),
-    path('contact/', views.Contact, name='contact'),
     
 #---------------Agents URLs------------------------------------------
     path('agents/', AgentListView.as_view(), name='agents-list'),

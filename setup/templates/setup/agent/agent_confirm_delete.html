@@ -1,10 +1,12 @@
 {% extends 'setup/base.html' %}
 
 {% block content %}
+
 <h2>Delete Agent</h2>
 <form method="POST" class="agent-form" novalidate>{% csrf_token %}
     <p>Are you sure you want to delete {{agent.first_name}} {{agent.last_name}}</p>
     <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
     <a class="btn btn-outline-secondary btn-sm" href="{% url 'agents-detail' object.id %}">Cancel</a>
 </form>
+
 {% endblock content%}

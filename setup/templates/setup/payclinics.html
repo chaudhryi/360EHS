@@ -58,21 +58,23 @@
                         <td align="right">$0.00</td>
                     </tr>
                     <tr>
-                        <td>Total:</td>
+                        <td>Total Outstanding:</td>
                         <td align="right">${{ total }}</td>
                     </tr>
                     <tr>
-                        <td>Items:</td>
+                        <td>Items Outstanding:</td>
                         <td align="right">{{ count }}</td>
                     </tr>
+                </table>
+                <hr>
+                <table>
                     <tr>
-                        <td>
-                            <form method="POST" action="{% url 'payclinics' %}" class="payment-form">{% csrf_token %}
-                                <input type="text" size="14" name="reference" placeholder="360EHS check #" required>
-                                <input type="hidden" name="payclinic_id" value="{{ clinic.id }}">
-                                <button class="btn btn-danger btn-sm mt=1 mb=3" type="submit">Pay Clinic</button>
-                            </form>
-                        </td>
+                        <td>Total:</td>
+                        <td><input value="$0.00" readonly="readonly" type="text" name="billtotal" /></td>
+                    </tr>
+                    <tr>
+                        <td>Items:</td>
+                        <td><input value="0" readonly="readonly" type="text" name="itemtotal" /></td>
                     </tr>
                 </table>
             </h6>
@@ -83,11 +85,15 @@
     </div>
 </div>
 
-<hr>
+<form method="POST" action="{% url 'payclinics' %}" class="payment-form">{% csrf_token %}
+    <input type="text" size="14" name="reference" placeholder="360EHS check #" required>
+    <input type="hidden" name="payclinic_id" value="{{ clinic.id }}">
+    <button class="btn btn-danger btn-sm mt=1 mb=3" type="submit">Pay Clinic</button>
 
 <table class="table table-sm table-striped">
     <thead class="thead-dark">
         <tr>
+            <th><input type="checkbox" id="checkall" onclick="totalIt()"></th>
             <th scope="col">Invoice#</th>
             <th scope="col">Claimant</th>
             <th scope="col">Source</th>
@@ -101,6 +107,8 @@
     <tbody>
         {% for bill in clinicbills %}
         <tr>
+            <td><input type="checkbox" class="bill" value="{{ bill.total }}" name="{{bill.id}}"" onclick="
+                totalIt()"></td>
             <td>{{ bill.invoice }}</td>
             <td>{{ bill.invoice.assessment.claimant }}</td>
             <td>{{ bill.invoice.assessment.claimant.source }}</td>
@@ -113,7 +121,11 @@
         {% endfor %}
     </tbody>
 </table>
-
+</form>
 <hr>
 {% endif %}
+
+<script src="{% static 'setup/js/multicheckbox.js' %}"></script> 
+    
+
 {% endblock content %}
