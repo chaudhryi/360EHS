@@ -19,19 +19,18 @@
 
 <!-- class="cell-border compact stripe" -->
 <!-- class="table table-sm table-striped compact" -->
-<table id="table_id" class="cell-border compact stripe" >
+<table id="table_id" style="display:none;" class="table table-sm table-striped">
     <thead class="thead-dark">
         <tr>
             <th scope="col">Invoice#</th>
             <th scope="col">Claimant</th>
-            <th scope="col">Report</th>
             <th scope="col">Source</th>
+            <th scope="col">Report</th>
             <th scope="col">Date</th>
-            <th scope="col">Subtotal</th>
-            <th scope="col">HST</th>
             <th scope="col">Total</th>
             <th scope="col">Status</th>
             <th scope="col">View</th>
+            <th scope="col">PDF</th>
         </tr>
     </thead>
     <tbody>
@@ -42,8 +41,6 @@
             <td>{{ item.assessment.claimant.source }}</td>
             <td>{{ item.report_type.abbreviation }}</td>
             <td>{{ item.date }}</td>
-            <td>{{ item.subtotal }}</td>
-            <td>{{ item.tax }}</td>
             <td>{{ item.total }}</td>
             <td>{% if item.paid == True %}
                 <font color="green">PAID</font></span>
@@ -51,27 +48,24 @@
                 <font color="red">OUTSTANDING</font></span>
                 {% endif %} </td>
             <td><a class="material-icons" href="{% url 'invoices-detail' item.pk %}">description</a></td>
+            <td><a class="material-icons" href="{% url 'invoicepdf' item.pk %}">picture_as_pdf</a></td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
 {% block js %}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.20/af-2.3.4/b-1.6.1/b-colvis-1.6.1/b-html5-1.6.1/b-print-1.6.1/cr-1.5.2/fc-3.3.0/kt-2.5.1/r-2.2.3/rg-1.1.1/rr-1.2.6/sp-1.0.1/sl-1.3.1/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/b-print-1.6.2/sp-1.1.1/datatables.min.css"/>
  
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.20/af-2.3.4/b-1.6.1/b-colvis-1.6.1/b-html5-1.6.1/b-print-1.6.1/cr-1.5.2/fc-3.3.0/kt-2.5.1/r-2.2.3/rg-1.1.1/rr-1.2.6/sp-1.0.1/sl-1.3.1/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.21/b-1.6.2/b-html5-1.6.2/b-print-1.6.2/sp-1.1.1/datatables.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        $('#table_id').DataTable({
-            dom: 'Blfrtip',
-            buttons: [
-                'excelHtml5', 'pdf'
-            ]
+            $('#table_id').DataTable();
+            $('#table_id').show();
         });
-    });
 </script>
 
 {% endblock js %}

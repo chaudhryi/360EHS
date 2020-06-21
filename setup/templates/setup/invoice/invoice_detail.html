@@ -1,8 +1,10 @@
 {% extends 'setup/base.html' %}
 
+{% load static %}
+
 {% block content %}
 
-<div class="container">
+<div id="pdfcontent" class="container" style="font-size:15px;">
     <div class="card">
         <div class="card-header">            
             <strong>360 EHS Invoice #:</strong> {{ invoice.number }}

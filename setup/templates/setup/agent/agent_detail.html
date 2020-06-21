@@ -56,20 +56,22 @@
     <thead class="thead-dark">
         <tr>
             <th scope="col">Invoice</th>
-            <th scope="col">Assessment Date</th>
+            <th scope="col">Reference</th>
             <th scope="col">Total</th>
             <th scope="col">Date Paid</th>
-            <th scope="col">Paid</th>
+            <th scope="col">Description</th>
+            <th scope="col">PDF</th>
         </tr>
     </thead>
     <tbody>
         {% for item in bills %}
         <tr>
-            <td>{{ item.invoice }}</a></td>
-            <td>{{ item.bill_date }}</td>
+            <td>{{ item.pk }}</a></td>
+            <td>{{ item.reference }}</td>
             <td>${{ item.total }}</td>
-            <td>{{ item.paid_date }}</td>
-            <td>{{ item.paid }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.description }}</td>
+            <td><a class="material-icons" href="{% url 'agentpdf' item.pk %}">picture_as_pdf</a></td>
         </tr>
         {% endfor %}
 

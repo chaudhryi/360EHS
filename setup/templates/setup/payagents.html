@@ -11,6 +11,7 @@
 
 <form method="POST" action="{% url 'payagents' %}" class="payment-form" novalidate>{% csrf_token %}
     <select name="agent_id">
+        <option disabled selected value> -- Select an Agent -- </option>
         {% for agent in agents %}
         <option value="{{ agent.id }}">{{ agent }} </option>
         {% endfor %}

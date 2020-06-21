@@ -11,10 +11,11 @@
 
 <form method="POST" action="{% url 'payclinics' %}" class="payment-form" novalidate>{% csrf_token %}
     <select name="clinic_id">
+        <option disabled selected value> -- Select a Clinic -- </option>
         {% for clinic in clinics %}
-            <option value="{{ clinic.id }}">{{ clinic }} </option>
+        <option value="{{ clinic.id }}">{{ clinic }} </option>
         {% endfor %}
-    </select>    
+    </select>
     <button class="btn btn-primary btn-sm mt=1 mb=3" type="submit">Find Unpaid Invoices</button>
 </form>
 

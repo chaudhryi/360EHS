@@ -11,6 +11,13 @@ from itertools import chain
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.views.generic import View
+
+from xhtml2pdf import pisa
+
 
 
 def Index(request):
@@ -34,7 +41,7 @@ class AgentDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(AgentDetailView, self).get_context_data(**kwargs)
-        context['bills'] = AgentBill.objects.filter(invoice__assessment__agent=self.object)
+        context['bills'] = Expense.objects.filter(agent=self.object)
         return context
 
 
@@ -602,7 +609,7 @@ def ReversePayment(request, item_id):
 # -----------------------Pay Doctors / Agents / Clinics Views---------------------------------------
 
 def PayDoctors(request):
-    doctors = Doctor.objects.all()
+    doctors = Doctor.objects.all().order_by('last_name')
     context = {'doctors': doctors}  
 
     if request.method == 'POST':
@@ -667,7 +674,7 @@ def PayDoctors(request):
 
 
 def PayAgents(request):
-    agents = Agent.objects.all()
+    agents = Agent.objects.all().order_by('last_name')
     context = {'agents': agents}
 
     if request.method == 'POST':
@@ -723,7 +730,7 @@ def PayAgents(request):
 
 
 def PayClinics(request):
-    clinics = Clinic.objects.all()
+    clinics = Clinic.objects.all().order_by('name')
     context = {'clinics': clinics}
       
 
@@ -731,7 +738,8 @@ def PayClinics(request):
         if 'clinic_id' in request.POST:
             clinic_id = request.POST.get('clinic_id')
             clinic = Clinic.objects.get(id=clinic_id)
-            clinicbills = ClinicBill.objects.filter(invoice__assessment__clinic=clinic_id, paid=False)
+            clinicbills = clinic.clinicbill_set.filter(clinic=clinic_id, paid=False)
+            # clinicbills = ClinicBill.objects.filter(invoice__assessment__clinic=clinic_id, paid=False)
             total = clinicbills.aggregate(Sum('total'))["total__sum"]
             count = clinicbills.count()
 
@@ -747,9 +755,16 @@ def PayClinics(request):
             clinic_id = request.POST.get('payclinic_id')
             clinic = Clinic.objects.get(id=clinic_id)
             reference = request.POST.get('reference')
-            clinicbills = ClinicBill.objects.filter(invoice__assessment__clinic=clinic_id, paid=False)
+            clinicbills = clinic.clinicbill_set.filter(clinic=clinic_id, paid=False)
+            # clinicbills = ClinicBill.objects.filter(invoice__assessment__clinic=clinic_id, paid=False)
             payee = clinic
-            total = clinicbills.aggregate(Sum('total'))["total__sum"]
+
+            billtotal = 0.00
+            for bill in clinicbills:
+                if request.POST.get(str(bill.id)):
+                    amt = float(request.POST.get(str(bill.id)))
+                    billtotal += amt
+            
             description = 'Clinic payout'
 
             expense = Expense(
@@ -757,16 +772,17 @@ def PayClinics(request):
                 description = description,
                 tax = '0.00',
                 payee = payee,
-                total = total,
+                total = billtotal,
                 clinic = clinic
                 )
             expense.save()
             
             for bill in clinicbills:
-                bill.paid = True
-                bill.expense = expense
-                bill.paid_date = date.today()
-                bill.save()
+                if request.POST.get(str(bill.id)):
+                    bill.paid = True
+                    bill.expense = expense
+                    bill.paid_date = date.today()
+                    bill.save()
 
     return render(request, 'setup/payclinics.html', context)
 
@@ -943,6 +959,32 @@ def Ledger(request):
     }
     return render(request, 'setup/ledger.html', context)
 
+
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+
+def GenerateInvoicePdf(request, pk):
+    invoice = Invoice.objects.get(id=pk)
+    data = {"invoice": invoice}
+    pdf = render_to_pdf('setup/invoice/invoice_pdf.html', data)
+    return HttpResponse(pdf, content_type='application/pdf')
+
+
+def GenerateAgentPdf(request, pk):
+    agentbills = AgentBill.objects.filter(expense=pk)
+    expense = Expense.objects.get(id=pk)
+    data = {"agentbills": agentbills,
+            "expense": expense}
+    pdf = render_to_pdf('setup/agent/agent_pdf.html', data)
+    return HttpResponse(pdf, content_type='application/pdf')
 
 
 
