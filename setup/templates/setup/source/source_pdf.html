@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>{{expense.agent.first_name}} {{expense.agent.last_name}}</title>
+    <title>{{source.name}} statement</title>
     <style>
         body {
             background-color: #333;
@@ -40,7 +40,7 @@
         th {
             padding: 5px;
             border: 1px solid rgb(192, 189, 189);
-            width: 185px;
+            width: 123px;
         }
 
         th {
@@ -62,28 +62,26 @@
     <div class="container">
         <table>
             <caption>
-                AGENT STATEMENT : {{expense.agent.first_name}} {{expense.agent.last_name}}
+                STATEMENT : {{source.name}} 
             </caption>
             <thead>
                 <tr>
-                    <th colspan="1">Invoice #: {{ expense.pk }}</th>
-                    <th colspan="2">360EHS Reference #: {{ expense.reference }}</th>
-                    <th colspan="1">Pay Date: {{ expense.date }}</th>
+                    <th colspan="6">Statement Date: {{ date }}</th>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                        <h4>FROM:</h4>
+                    <td colspan="3">
+                        <h4>REMIT PAYMENT TO:</h4>
                         <p>360 Essential Health Solutions<br>
                             10 Geddes Lane, Brampton, ONT L6P1S6<br>
                             email: info@360ehs.com<br>
                             Phone: 416 555 5555</p>
                     </td>
-                    <td colspan="2">
-                        <h4>AGENT: </h4>
-                        <p>{{expense.agent.first_name}} {{expense.agent.last_name}}<br>
-                            {{ expense.agent.address }}<br>
-                            Email: {{ expense.agent.email }}<br>
-                            Phone: {{ expense.agent.mobile_phone }}<br>
+                    <td colspan="3">
+                        <h4>CUSTOMER: </h4>
+                        <p> {{source.name}} <br>
+                            {{ source.address }}<br>
+                            ATTN: {{ source.billing_contact }}<br>
+                            Phone: {{ source.billing_email }}<br>
                             </p>
                     </td>
                 </tr>
@@ -91,32 +89,36 @@
             </thead>
             <tbody>
                 <tr>
+                    <th>Invoice</th>
                     <th>Physician</th>
-                    <th>Date</th>
-                    <th>Claimant</th>
-                    <th>Total</th>
+                    <th>Report Type</th>
+                    <th>Invoice Date</th>
+                    <th>Age</th>
+                    <th>Invoice Amount</th>
                 </tr>
-                {% for item in agentbills %}
+                {% for item in sourcebills %}
                 <tr>
-                    <td>Dr. {{ item.invoice.assessment.doctor.last_name }} ({{ item.invoice.report_type.abbreviation }})</td>
-                    <td style="text-align:center">{{item.invoice.assessment.date}}</td>
-                    <td style="text-align:center">{{ item.invoice.assessment.claimant.full_name }}</td>
+                    <td style="text-align:center">{{ item.number }} </td>
+                    <td style="text-align:center">Dr. {{ item.assessment.doctor.last_name }}</td>
+                    <td style="text-align:center">{{ item.report_type.abbreviation }} </td>
+                    <td style="text-align:center">{{ item.date }}</td>
+                    <td style="text-align:center">{{ item.age }} days</td>
                     <td style="text-align:right">${{ item.total }}</td>
                 </tr>
                 {% endfor %}
                 <tr>
-                    <th style="text-align:right" colspan="3">Subtotal</th>
-                    <td style="text-align:right">${{ expense.total }}</td>
+                    <th style="text-align:right" colspan="5">Subtotal</th>
+                    <td style="text-align:right">${{ subtotal }}</td>
                 </tr>
                 <tr>
-                    <th style="text-align:right" colspan="3">HST (13%)</th>
-                    <td style="text-align:right">${{ expense.tax }}</td>
+                    <th style="text-align:right" colspan="5">HST (13%)</th>
+                    <td style="text-align:right">${{ tax }}</td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <th style="text-align:right" colspan="3">Payment Total</th>
-                    <td style="text-align:right">${{ expense.total }}</td>
+                    <th style="text-align:right" colspan="5">Payment Total</th>
+                    <td style="text-align:right">${{ total }}</td>
                 </tr>
             </tfoot>
             </table>

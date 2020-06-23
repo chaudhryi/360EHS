@@ -10,6 +10,7 @@ from operator import attrgetter
 from itertools import chain
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
+from datetime import datetime
 
 from io import BytesIO
 from django.http import HttpResponse
@@ -79,6 +80,11 @@ class DoctorDetailView(DetailView):
     model = Doctor
     template_name = 'setup/doctor/doctor_detail.html'
     context_object_name = 'doctor'
+
+    def get_context_data(self, **kwargs):
+        context = super(DoctorDetailView, self).get_context_data(**kwargs)
+        context['bills'] = Expense.objects.filter(doctor=self.object)
+        return context
 
 
 class DoctorCreateView(CreateView):
@@ -150,11 +156,49 @@ class SourceDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(SourceDetailView, self).get_context_data(*args, **kwargs)
-        #context['rates'] = self.object.rate_set.all().order_by('-amount')  **THis also does the same thing
-        context['rates'] = Rate.objects.all().filter(source=self.object).order_by('-amount')
-        #context['rates'] = Rate.objects.all().filter(Source=self.kwargs['pk']).order_by('-amount')    **This also does the same thing
+        rates = Rate.objects.all().filter(source=self.object).order_by('-amount')
+        unpaidinvoices = Invoice.objects.all().filter(assessment__claimant__source=self.object, paid=False).order_by('date')
+        total = unpaidinvoices.aggregate(Sum('total'))["total__sum"]
+        subtotal = unpaidinvoices.aggregate(Sum('subtotal'))["subtotal__sum"]
+        tax = unpaidinvoices.aggregate(Sum('tax'))["tax__sum"]
+        d = datetime.now().date()
+        count = unpaidinvoices.count()
+
+
+        for item in unpaidinvoices:
+            delta = (d - item.date)
+            item.age = delta.days
+
+        context['unpaidinvoices'] = unpaidinvoices
+        context['rates'] = rates
+        context['total'] = total
+        context['subtotal'] = subtotal
+        context['tax'] = tax
+        context['count'] = count
+
         return context
 
+
+    # sourcebills = Invoice.objects.filter(paid=False, assessment__claimant__source=pk).order_by('date')
+    # total = sourcebills.aggregate(Sum('total'))["total__sum"]
+    # subtotal = sourcebills.aggregate(Sum('subtotal'))["subtotal__sum"]
+    # tax = sourcebills.aggregate(Sum('tax'))["tax__sum"]
+    # source = Source.objects.get(id=pk)
+    # date = datetime.today()
+    # d = datetime.now().date()
+
+    # for item in sourcebills:
+    #     delta = (d - item.date)
+    #     item.age = delta.days
+        
+
+    # data = {"sourcebills": sourcebills,
+    #         "source": source,
+    #         "date": date,
+    #         "total": total,
+    #         "subtotal": subtotal,
+    #         "tax": tax
+    #         }
 
 class SourceCreateView(CreateView):
     model = Source
@@ -975,7 +1019,13 @@ def GenerateInvoicePdf(request, pk):
     invoice = Invoice.objects.get(id=pk)
     data = {"invoice": invoice}
     pdf = render_to_pdf('setup/invoice/invoice_pdf.html', data)
-    return HttpResponse(pdf, content_type='application/pdf')
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "Invoice_%s.pdf" %(invoice.number)
+        content = "inline; filename='%s'" %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
 
 
 def GenerateAgentPdf(request, pk):
@@ -984,7 +1034,58 @@ def GenerateAgentPdf(request, pk):
     data = {"agentbills": agentbills,
             "expense": expense}
     pdf = render_to_pdf('setup/agent/agent_pdf.html', data)
-    return HttpResponse(pdf, content_type='application/pdf')
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "Agent_%s%s.pdf" %(expense.agent.last_name,expense.id)
+        content = "inline; filename='%s'" %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
+    
+
+def GenerateDoctorPdf(request, pk):
+    doctorbills = DoctorBill.objects.filter(expense=pk)
+    expense = Expense.objects.get(id=pk)
+    data = {"doctorbills": doctorbills,
+            "expense": expense}
+    pdf = render_to_pdf('setup/doctor/doctor_pdf.html', data)
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "Doctor_%s%s.pdf" %(expense.doctor.last_name,expense.id)
+        content = "inline; filename='%s'" %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
+
+def GenerateSourcePdf(request, pk):
+    sourcebills = Invoice.objects.filter(paid=False, assessment__claimant__source=pk).order_by('date')
+    total = sourcebills.aggregate(Sum('total'))["total__sum"]
+    subtotal = sourcebills.aggregate(Sum('subtotal'))["subtotal__sum"]
+    tax = sourcebills.aggregate(Sum('tax'))["tax__sum"]
+    source = Source.objects.get(id=pk)
+    date = datetime.today()
+    d = datetime.now().date()
+
+    for item in sourcebills:
+        delta = (d - item.date)
+        item.age = delta.days
+        
+
+    data = {"sourcebills": sourcebills,
+            "source": source,
+            "date": date,
+            "total": total,
+            "subtotal": subtotal,
+            "tax": tax
+            }
+    pdf = render_to_pdf('setup/source/source_pdf.html', data)
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "Statement_%s.pdf" %(source.name)
+        content = "inline; filename='%s'" %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
 
 
 

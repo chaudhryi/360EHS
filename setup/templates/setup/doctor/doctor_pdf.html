@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>{{expense.agent.first_name}} {{expense.agent.last_name}}</title>
+    <title>{{expense.doctor.first_name}} {{expense.doctor.last_name}}</title>
     <style>
         body {
             background-color: #333;
@@ -62,12 +62,12 @@
     <div class="container">
         <table>
             <caption>
-                AGENT STATEMENT : {{expense.agent.first_name}} {{expense.agent.last_name}}
+                PHYSICIAN STATEMENT : {{expense.doctor.first_name}} {{expense.doctor.last_name}}
             </caption>
             <thead>
                 <tr>
                     <th colspan="1">Invoice #: {{ expense.pk }}</th>
-                    <th colspan="2">360EHS Reference #: {{ expense.reference }}</th>
+                    <th colspan="2">360EHS Payment Reference #: {{ expense.reference }}</th>
                     <th colspan="1">Pay Date: {{ expense.date }}</th>
                 </tr>
                 <tr>
@@ -79,11 +79,11 @@
                             Phone: 416 555 5555</p>
                     </td>
                     <td colspan="2">
-                        <h4>AGENT: </h4>
-                        <p>{{expense.agent.first_name}} {{expense.agent.last_name}}<br>
-                            {{ expense.agent.address }}<br>
-                            Email: {{ expense.agent.email }}<br>
-                            Phone: {{ expense.agent.mobile_phone }}<br>
+                        <h4>PAYMENT TO: </h4>
+                        <p>Dr. {{expense.doctor.first_name}} {{expense.doctor.last_name}}<br>
+                            {{ expense.doctor.address }}<br>
+                            Email: {{ expense.doctor.email }}<br>
+                            Phone: {{ expense.doctor.mobile_phone }}<br>
                             </p>
                     </td>
                 </tr>
@@ -91,22 +91,22 @@
             </thead>
             <tbody>
                 <tr>
-                    <th>Physician</th>
+                    <th>Description</th>
                     <th>Date</th>
                     <th>Claimant</th>
                     <th>Total</th>
                 </tr>
-                {% for item in agentbills %}
+                {% for item in doctorbills %}
                 <tr>
                     <td>Dr. {{ item.invoice.assessment.doctor.last_name }} ({{ item.invoice.report_type.abbreviation }})</td>
                     <td style="text-align:center">{{item.invoice.assessment.date}}</td>
                     <td style="text-align:center">{{ item.invoice.assessment.claimant.full_name }}</td>
-                    <td style="text-align:right">${{ item.total }}</td>
+                    <td style="text-align:right">${{ item.subtotal }}</td>
                 </tr>
                 {% endfor %}
                 <tr>
                     <th style="text-align:right" colspan="3">Subtotal</th>
-                    <td style="text-align:right">${{ expense.total }}</td>
+                    <td style="text-align:right">${{ expense.subtotal }}</td>
                 </tr>
                 <tr>
                     <th style="text-align:right" colspan="3">HST (13%)</th>

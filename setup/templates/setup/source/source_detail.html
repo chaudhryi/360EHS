@@ -46,26 +46,67 @@
 <div class="form-group col-md-12 mb-0">
     <b>Notes:</b> {{ source.notes }}
 </div>
-<hr>
+
+<br>
 
 <table class="table table-sm table-striped">
     <thead class="thead-dark">
         <tr>
-            
-            <th scope="col">Type</th>
-            <th scope="col">Amount</th>
+            {% for item in rates %}
+                <td>{{ item.report_type.abbreviation }}</td>
+            {% endfor %}
         </tr>
     </thead>
     <tbody>
-        {% for item in rates %}
         <tr>
-            
-            <td>{{ item.report_type }}</td>
-            <td>${{ item.amount }}</td>
+            {% for item in rates %}
+                <td>${{ item.amount }}</td>
+            {% endfor %}
         </tr>
-        {% endfor %}
-
     </tbody>
 </table>
 
+<table class="table table-sm table-striped table-hover">
+    <caption style="caption-side: top;">UNPAID INVOICES - <a class="btn btn-danger btn-sm mt=1 mb=1" href="{% url 'sourcepdf' source.pk %}" target="_blank">GENERATE STATEMENT</a></caption>
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Subtotal: {{subtotal}}</th>
+            <th scope="col">Tax: {{tax}}</th>
+            <th scope="col">Total: {{total}}</th>
+            <th scope="col">Unpaid Invoices: {{count}}</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        <tr>
+            <th scope="col">Invoice</th>
+            <th scope="col">Report</th>
+            <th scope="col">Physician</th>
+            <th scope="col">Invoice Date</th>
+            <th scope="col">Total</th>
+            <th scope="col">Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in unpaidinvoices %}
+        <tr>
+            <td>{{ item.number }}</a></td>
+            <td>{{ item.report_type.abbreviation }} - {{ item.assessment.claimant.first_name }} {{ item.assessment.claimant.last_name }}</td>
+            <td>{{ item.assessment.doctor.last_name }}</td>
+            <td>{{ item.date }}</td>
+            <td>${{ item.total }}</td>
+            {% if item.age > 90 and item.age < 120 %}
+                <td class="bg-warning">{{ item.age }}</td>
+            {% elif item.age <= 90 %}
+                <td class="bg-success">{{ item.age }}</td>
+            {% elif item.age >= 120 %}
+                <td class="bg-danger">{{ item.age }}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
 {% endblock content %}
+
